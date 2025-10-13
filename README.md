@@ -62,7 +62,7 @@ npx shadcn@latest init
 
 Or create a new project:
 \`\`\`bash
-npx create-next-app@latest my-blog --example "https://github.com/yourusername/gradient-blog"
+npx create-next-app@latest my-blog --example "https://github.com/yourusername/blog"
 \`\`\`
 
 3. Install required dependencies:
@@ -90,27 +90,6 @@ npm start
 # or
 yarn build
 yarn start
-\`\`\`
-
-## Project Structure
-
-\`\`\`
-├── app/
-│   ├── about/
-│   │   └── page.tsx          # About page
-│   ├── blog/
-│   │   └── page.tsx          # Blog listing page
-│   ├── layout.tsx            # Root layout with theme provider
-│   ├── page.tsx              # Home page
-│   └── globals.css           # Global styles and theme tokens
-├── components/
-│   ├── header.tsx            # Navigation header with logo
-│   ├── footer.tsx            # Footer with author info
-│   ├── theme-provider.tsx    # Theme context provider
-│   └── theme-toggle.tsx      # Light/dark mode toggle
-├── public/
-│   └── *.jpg                 # Images and assets
-└── README.md
 \`\`\`
 
 ## Customization
