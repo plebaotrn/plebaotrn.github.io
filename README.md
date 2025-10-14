@@ -1,4 +1,4 @@
-# Gradient Blog Website
+# Blog Website
 
 A modern, responsive blog website featuring a stunning blue-pink gradient theme with light/dark mode support and smooth animations throughout.
 
