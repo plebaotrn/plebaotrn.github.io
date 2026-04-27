@@ -45,13 +45,18 @@ export function Header() {
             <Link
               key={item.name}
               href={item.href}
-              className={`text-sm transition-colors duration-200 ${
+              className={`relative text-sm transition-colors duration-200 pb-0.5 group ${
                 pathname === item.href
                   ? "text-primary font-medium"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {item.name}
+              <span
+                className={`absolute bottom-0 left-0 h-px bg-primary transition-all duration-300 ease-out ${
+                  pathname === item.href ? "w-full" : "w-0 group-hover:w-full"
+                }`}
+              />
             </Link>
           ))}
         </div>

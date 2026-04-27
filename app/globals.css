@@ -127,7 +127,7 @@
 }
 
 @layer utilities {
-  /* Accent text — indigo, no rainbow */
+  /* Accent text */
   .gradient-text {
     color: var(--primary);
   }
@@ -146,4 +146,129 @@
   .font-mono {
     font-family: var(--font-geist-mono), ui-monospace, monospace;
   }
+}
+
+/* ── Scroll Reveal ─────────────────────────────────────────── */
+.sr-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sr-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sr-right {
+  opacity: 0;
+  transform: translateX(28px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sr-none {
+  opacity: 0;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sr-visible {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* ── Card hover glow ───────────────────────────────────────── */
+.card-hover {
+  transition:
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px -8px color-mix(in oklch, var(--primary) 25%, transparent);
+  border-color: color-mix(in oklch, var(--primary) 40%, var(--border));
+}
+
+/* ── Underline link ────────────────────────────────────────── */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--primary);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* ── Music playing pulse ring ──────────────────────────────── */
+@keyframes music-ring {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 50%, transparent); }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.music-playing {
+  animation: music-ring 1.8s ease infinite;
+}
+
+/* ── Tag pill hover ────────────────────────────────────────── */
+.tag-pill {
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+.tag-pill:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ── Shimmer on primary buttons ────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.btn-shimmer {
+  background-size: 200% auto;
+  transition: background-position 0s, opacity 0.2s;
+}
+.btn-shimmer:hover {
+  animation: shimmer 1.5s linear infinite;
+}
+
+/* ── Section fade ──────────────────────────────────────────── */
+@keyframes section-fade {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+.section-fade {
+  animation: section-fade 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Stagger children ──────────────────────────────────────── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stagger-children.sr-visible > *:nth-child(1) { transition-delay: 0ms; }
+.stagger-children.sr-visible > *:nth-child(2) { transition-delay: 70ms; }
+.stagger-children.sr-visible > *:nth-child(3) { transition-delay: 140ms; }
+.stagger-children.sr-visible > *:nth-child(4) { transition-delay: 210ms; }
+.stagger-children.sr-visible > *:nth-child(5) { transition-delay: 280ms; }
+.stagger-children.sr-visible > *:nth-child(6) { transition-delay: 350ms; }
+.stagger-children.sr-visible > *:nth-child(7) { transition-delay: 420ms; }
+.stagger-children.sr-visible > *:nth-child(8) { transition-delay: 490ms; }
+.stagger-children.sr-visible > * {
+  opacity: 1;
+  transform: none;
 }

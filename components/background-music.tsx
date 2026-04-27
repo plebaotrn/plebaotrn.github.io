@@ -78,8 +78,8 @@ export function BackgroundMusic() {
         aria-label="Music player"
         className={`fixed bottom-6 right-6 z-50 h-11 w-11 rounded-full flex items-center justify-center shadow-lg border border-border transition-all duration-200
           ${isPlaying
-            ? "bg-primary text-primary-foreground"
-            : "bg-background text-muted-foreground hover:text-foreground"
+            ? "bg-primary text-primary-foreground music-playing"
+            : "bg-background text-muted-foreground hover:text-foreground hover:border-primary/50"
           }`}
       >
         <Music className="h-4 w-4" />
