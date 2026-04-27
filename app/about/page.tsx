@@ -1,31 +1,17 @@
+import Image from "next/image"
 import { MapPin, Mail, Github, Linkedin, GraduationCap, Briefcase, Award } from "lucide-react"
 
 export const metadata = {
   title: "About | Pham Le Bao Tran",
-  description: "Software Developer based in Melbourne. Swinburne University, Bachelor of Computer Science.",
+  description: "Software Developer. Swinburne University — Vietnam Campus. Bachelor of Computer Science.",
 }
 
 const skillGroups = [
-  {
-    label: "Languages",
-    items: ["JavaScript", "TypeScript", "C#", "Kotlin", "HTML", "CSS", "SQL"],
-  },
-  {
-    label: "Frameworks",
-    items: ["Vue 3", "React", "Next.js", "Tailwind CSS", "Bootstrap 5"],
-  },
-  {
-    label: "Tools & Platforms",
-    items: ["Git", "AWS", "Supabase", "VS Code", "Android Studio", "Vite"],
-  },
-  {
-    label: "Design",
-    items: ["Figma", "Canva", "Adobe Premiere"],
-  },
-  {
-    label: "Methods",
-    items: ["OOP", "UI/UX Design", "Unit Testing", "Agile"],
-  },
+  { label: "Languages", items: ["JavaScript", "TypeScript", "C#", "Kotlin", "HTML", "CSS", "SQL"] },
+  { label: "Frameworks", items: ["Vue 3", "React", "Next.js", "Tailwind CSS", "Bootstrap 5"] },
+  { label: "Tools & Platforms", items: ["Git", "AWS", "Supabase", "VS Code", "Android Studio", "Vite"] },
+  { label: "Design", items: ["Figma", "Canva", "Adobe Premiere"] },
+  { label: "Methods", items: ["OOP", "UI/UX Design", "Unit Testing", "Agile"] },
 ]
 
 const experience = [
@@ -34,8 +20,8 @@ const experience = [
     org: "SkillSpar",
     period: "2024 – 2025",
     bullets: [
-      "Developed and maintained frontend features using professional coding standards, adapting quickly to internal systems and project workflows.",
-      "Gained end-to-end understanding of software project lifecycles, participating in planning, development, and review stages.",
+      "Developed and maintained frontend features using professional coding standards.",
+      "Participated in planning, development, and review stages across the full software lifecycle.",
     ],
   },
   {
@@ -43,7 +29,7 @@ const experience = [
     org: "RMIT GenAI Hackathon 2025",
     period: "Oct 2025",
     bullets: [
-      "Competitive hackathon at RMIT Vietnam Campus focused on building innovative solutions using Generative AI technologies within a time-constrained environment.",
+      "Competed at RMIT Vietnam Campus, building innovative GenAI-powered solutions under time constraints.",
     ],
   },
   {
@@ -51,8 +37,8 @@ const experience = [
     org: "Chromatique Club",
     period: "2024 – 2025",
     bullets: [
-      "Produced high-quality visual content for social media, ensuring brand consistency across campaigns.",
-      "Managed post-production for digital assets including video editing and graphic design deliverables.",
+      "Produced visual content for social media campaigns ensuring brand consistency.",
+      "Managed post-production for video editing and graphic design deliverables.",
     ],
   },
   {
@@ -60,20 +46,14 @@ const experience = [
     org: "YACP Journey Project",
     period: "2022",
     bullets: [
-      "Delivered creative design assets under tight deadlines while coordinating with a cross-functional team.",
+      "Delivered creative design assets under tight deadlines in a cross-functional team.",
     ],
   },
 ]
 
 const certifications = [
-  {
-    name: "Cisco CCNA",
-    detail: "Intro to Networks & Switching, Routing, Wireless Essentials",
-  },
-  {
-    name: "Microsoft Office Specialist (MOS)",
-    detail: "Excel 2016 & Word 2016",
-  },
+  { name: "Cisco CCNA", detail: "Intro to Networks & Switching, Routing, Wireless Essentials" },
+  { name: "Microsoft Office Specialist (MOS)", detail: "Excel 2016 & Word 2016" },
 ]
 
 const languages = [
@@ -84,58 +64,75 @@ const languages = [
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-20 flex flex-col gap-16">
+    <div className="flex flex-col">
 
-      {/* Header */}
-      <section className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-            Pham Le Bao Tran
-          </h1>
-          <p className="text-lg text-muted-foreground">Software Developer</p>
+      {/* ── Hero ────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl w-full px-6 pt-20 pb-12">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+          {/* Photo */}
+          <div className="flex-shrink-0">
+            <div className="relative h-32 w-32 rounded-full overflow-hidden ring-4 ring-border shadow-lg">
+              <Image
+                src="/profile.jpg"
+                alt="Pham Le Bao Tran"
+                fill
+                className="object-cover object-top"
+                priority
+              />
+            </div>
+          </div>
+
+          {/* Text */}
+          <div className="flex flex-col gap-3 text-center sm:text-left">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">Pham Le Bao Tran</h1>
+              <p className="text-lg text-muted-foreground mt-1">Software Developer</p>
+            </div>
+
+            <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <MapPin className="h-4 w-4" /> Footscray, VIC 3011, Australia
+              </span>
+              <a href="mailto:phamtran2082005@gmail.com" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+                <Mail className="h-4 w-4" /> phamtran2082005@gmail.com
+              </a>
+            </div>
+
+            <div className="flex justify-center sm:justify-start gap-3">
+              <a href="https://github.com/plebaotrn" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Github className="h-4 w-4" /> GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/le-bao-tran-pham-016987325/" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Linkedin className="h-4 w-4" /> LinkedIn
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1.5">
-            <MapPin className="h-4 w-4" />
-            Footscray, VIC 3011, Australia
-          </span>
-          <a href="mailto:phamtran2082005@gmail.com" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Mail className="h-4 w-4" />
-            phamtran2082005@gmail.com
-          </a>
-          <a href="https://github.com/plebaotrn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Github className="h-4 w-4" />
-            github.com/plebaotrn
-          </a>
-          <a href="https://linkedin.com/in/plebaotrn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
-            <Linkedin className="h-4 w-4" />
-            LinkedIn
-          </a>
+        {/* Summary */}
+        <div className="mt-8 max-w-2xl">
+          <p className="text-base text-muted-foreground leading-relaxed">
+            Aspiring Software Developer specialising in web application development and UI/UX design,
+            with hands-on experience delivering full-stack and frontend projects. Eager to contribute
+            technical skills and creative problem-solving to a dynamic team in the Australian tech industry.
+          </p>
         </div>
-
-        <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
-          Aspiring Software Developer specialising in web application development and UI/UX design,
-          with hands-on experience delivering full-stack and frontend projects. Eager to contribute
-          technical skills and creative problem-solving to a dynamic team in the Australian tech industry.
-        </p>
       </section>
 
-      <hr className="border-border" />
+      <div className="border-t border-border" />
 
-      {/* Skills */}
-      <section className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+      {/* ── Skills ──────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl w-full px-6 py-12 flex flex-col gap-6">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Skills</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {skillGroups.map((group) => (
             <div key={group.label} className="flex flex-col gap-2">
-              <p className="text-xs font-medium text-foreground">{group.label}</p>
+              <p className="text-xs font-semibold text-foreground">{group.label}</p>
               <div className="flex flex-wrap gap-1.5">
                 {group.items.map((item) => (
-                  <span
-                    key={item}
-                    className="px-2.5 py-1 text-xs font-mono bg-muted text-muted-foreground rounded border border-border"
-                  >
+                  <span key={item} className="px-2.5 py-1 text-xs font-mono bg-muted text-muted-foreground rounded-full border border-border">
                     {item}
                   </span>
                 ))}
@@ -145,44 +142,42 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <hr className="border-border" />
+      <div className="border-t border-border bg-muted/40">
 
-      {/* Education */}
-      <section className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Education</h2>
-        <div className="flex items-start gap-4 p-5 border border-border rounded-lg bg-card">
-          <div className="mt-0.5 flex-shrink-0">
-            <GraduationCap className="h-5 w-5 text-primary" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-              <p className="text-sm font-semibold text-foreground">Swinburne University of Technology</p>
-              <p className="text-xs text-muted-foreground font-mono">May 2024 – 2027</p>
+        {/* ── Education ───────────────────────────────────── */}
+        <section className="mx-auto max-w-5xl w-full px-6 py-12 flex flex-col gap-6">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Education</h2>
+          <div className="flex items-start gap-4 p-5 rounded-xl border border-border bg-card shadow-sm">
+            <GraduationCap className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+            <div className="flex flex-col gap-1">
+              <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                <p className="text-sm font-semibold text-foreground">Swinburne University of Technology</p>
+                <p className="text-xs text-muted-foreground font-mono">May 2024 – 2027</p>
+              </div>
+              <p className="text-sm text-muted-foreground">Bachelor of Computer Science — Software Development</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Started at Melbourne Hawthorn Campus · Transferred to Vietnam Campus, Feb 2026
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground">Bachelor of Computer Science — Software Development</p>
-            <p className="text-xs text-muted-foreground">Melbourne Hawthorn Campus · Transferred Feb 2026</p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <hr className="border-border" />
+      </div>
 
-      {/* Experience */}
-      <section className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+      {/* ── Experience ──────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl w-full px-6 py-12 flex flex-col gap-6">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Experience</h2>
         <div className="flex flex-col gap-4">
           {experience.map((exp) => (
-            <div key={`${exp.org}-${exp.period}`} className="flex items-start gap-4 p-5 border border-border rounded-lg bg-card">
-              <div className="mt-0.5 flex-shrink-0">
-                <Briefcase className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div className="flex flex-col gap-2 flex-1 min-w-0">
+            <div key={`${exp.org}-${exp.period}`} className="flex items-start gap-4 p-5 rounded-xl border border-border bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
+              <Briefcase className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+              <div className="flex flex-col gap-2 flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                   <div>
                     <span className="text-sm font-semibold text-foreground">{exp.role}</span>
                     <span className="text-sm text-muted-foreground"> · {exp.org}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground font-mono flex-shrink-0">{exp.period}</p>
+                  <p className="text-xs text-muted-foreground font-mono">{exp.period}</p>
                 </div>
                 <ul className="flex flex-col gap-1.5">
                   {exp.bullets.map((b, i) => (
@@ -198,38 +193,41 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <hr className="border-border" />
+      <div className="border-t border-border bg-muted/40">
 
-      {/* Certifications & Languages */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-250">
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Certifications</h2>
-          <div className="flex flex-col gap-3">
-            {certifications.map((cert) => (
-              <div key={cert.name} className="flex items-start gap-3 p-4 border border-border rounded-lg bg-card">
-                <Award className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">{cert.name}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{cert.detail}</p>
-                </div>
+        {/* ── Certifications & Languages ──────────────────── */}
+        <section className="mx-auto max-w-5xl w-full px-6 py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Certifications</h2>
+              <div className="flex flex-col gap-3">
+                {certifications.map((cert) => (
+                  <div key={cert.name} className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card shadow-sm">
+                    <Award className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{cert.name}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{cert.detail}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Languages</h2>
-          <div className="flex flex-col gap-3">
-            {languages.map((lang) => (
-              <div key={lang.name} className="flex items-center justify-between p-4 border border-border rounded-lg bg-card">
-                <p className="text-sm font-medium text-foreground">{lang.name}</p>
-                <span className="text-xs font-mono text-muted-foreground">{lang.level}</span>
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Languages</h2>
+              <div className="flex flex-col gap-3">
+                {languages.map((lang) => (
+                  <div key={lang.name} className="flex items-center justify-between p-4 rounded-xl border border-border bg-card shadow-sm">
+                    <p className="text-sm font-semibold text-foreground">{lang.name}</p>
+                    <span className="text-xs font-mono text-muted-foreground">{lang.level}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
+      </div>
     </div>
   )
 }

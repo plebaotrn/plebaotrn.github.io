@@ -42,7 +42,7 @@ export function Footer() {
               <Github className="h-4 w-4" />
             </a>
             <a
-              href="https://linkedin.com/in/plebaotrn"
+              href="https://www.linkedin.com/in/le-bao-tran-pham-016987325/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"

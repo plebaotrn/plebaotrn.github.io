@@ -7,6 +7,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { BackgroundMusic } from "@/components/background-music"
 import { Suspense } from "react"
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
         <ThemeProvider defaultTheme="light">
+          <BackgroundMusic />
           <div className="flex min-h-screen flex-col">
             <Suspense fallback={<div>Loading...</div>}>
               <Header />
