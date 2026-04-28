@@ -4,11 +4,9 @@ import { useState, useEffect, useRef } from "react"
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, Music, ChevronDown } from "lucide-react"
 import { Slider } from "@/components/ui/slider"
 
-const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
-
 const playlist = [
-  { title: "Wave Star", src: `${base}/wave-star.mp3` },
-  { title: "Mabataki 「瞬き」 — KIRA", src: `${base}/Mabataki.mp3` },
+  { title: "Wave Star", src: "/wave-star.mp3" },
+  { title: "Mabataki 「瞬き」 — KIRA", src: "/Mabataki.mp3" },
 ]
 
 export function BackgroundMusic() {
