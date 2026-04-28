@@ -2,6 +2,9 @@
 const nextConfig = {
   output: "export",
   basePath: "/rabbitchan",
+  env: {
+    NEXT_PUBLIC_BASE_PATH: "/rabbitchan",
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -9,7 +12,8 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    loader: "custom",
+    loaderFile: "./imageLoader.js",
   },
 }
 
