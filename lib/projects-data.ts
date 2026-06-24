@@ -1,3 +1,9 @@
+export interface DesignProcess {
+  problem: string
+  approach: string[]
+  outcome: string
+}
+
 export interface Project {
   id: number
   title: string
@@ -6,6 +12,7 @@ export interface Project {
   role: string
   team: boolean
   bullets: string[]
+  designProcess?: DesignProcess
   tags: string[]
   category: string
   githubUrl: string
@@ -30,6 +37,19 @@ export const projects: Project[] = [
       "Designed responsive UI screens in Figma before implementation",
       "Integrated real-time Supabase backend for persistent cloud storage",
     ],
+    designProcess: {
+      problem:
+        "Students and freelancers in Melbourne needed a simple way to discover and book co-working spaces, but existing solutions were complex and not mobile-friendly.",
+      approach: [
+        "Interviewed 3 potential users (uni students) to understand booking behaviour and pain points with existing tools",
+        "Mapped the end-to-end user journey: discover → compare → book → manage",
+        "Identified key friction points: too many steps, unclear availability, no booking history",
+        "Designed all screens in Figma first (wireframes → hi-fi) before writing code",
+        "Iterated on the booking flow after informal usability feedback — reduced steps from 5 to 3",
+      ],
+      outcome:
+        "Clean, mobile-first booking experience with real-time availability, persistent booking history, and a UI users described as \"straightforward.\"",
+    },
     tags: ["Vue 3", "Bootstrap 5", "Vite", "Supabase"],
     category: "Full Stack",
     githubUrl: "https://github.com/plebaotrn",
@@ -78,6 +98,28 @@ export const projects: Project[] = [
     image: "/coding-development-programming-colorful.jpg",
     status: "completed",
     period: "Jan – Mar 2025",
+    featured: true,
+  },
+  {
+    id: 6,
+    title: "HSRC — Wholebeing Science Website",
+    subtitle: "Corporate Website — Real Client",
+    description:
+      "Designed and developed the official bilingual (VI/EN) corporate website for HSRC — Human Sciences Research Centre, a Vietnamese organisation pioneering Wholebeing Science research and education.",
+    role: "Solo Designer & Developer",
+    team: false,
+    bullets: [
+      "Conducted user research to define two distinct audiences (Vietnamese researchers and international partners) and mapped separate user journeys",
+      "Designed bilingual UI in Figma with custom design tokens matching HSRC brand identity before implementation",
+      "Built interactive SPIRE 3D model using Three.js/React Three Fiber, Meaning Card wallpaper generator, team profiles, and articles system",
+    ],
+    tags: ["Next.js 15", "TypeScript", "Tailwind CSS", "Three.js", "React Three Fiber", "shadcn/ui", "Supabase"],
+    category: "Web / Real Client",
+    githubUrl: "https://github.com/plebaotrn",
+    demoUrl: "https://www.hsrc.vn/",
+    image: "/modern-web-design-colorful-gradient.jpg",
+    status: "completed",
+    period: "May 2025 – Present",
     featured: true,
   },
   {

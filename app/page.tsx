@@ -49,7 +49,7 @@ export default function HomePage() {
                 <span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
                 <p className="text-lg font-light hero-role-cycle">
                   <span className="role-1">Web Dev</span>
-                  <span className="role-2">UI Designer</span>
+                  <span className="role-2">UX Designer</span>
                   <span className="role-3">Builder</span>
                 </p>
               </div>

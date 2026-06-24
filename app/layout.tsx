@@ -13,7 +13,7 @@ import { Suspense } from "react"
 export const metadata: Metadata = {
   title: "Pham Le Bao Tran — Software Developer",
   description:
-    "Software Developer specialising in web application development and UI/UX design. Based in Melbourne, Australia.",
+    "Software Developer and UX Designer specialising in web application development, UI/UX design, and human-centred digital experiences. Based in Melbourne, Australia.",
 }
 
 export default function RootLayout({

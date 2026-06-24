@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Github, ExternalLink, Users, User, ArrowUpRight } from "lucide-react"
-import { projects } from "@/lib/projects-data"
+import { projects, type DesignProcess } from "@/lib/projects-data"
 import { ScrollReveal } from "@/components/scroll-reveal"
 
 export const metadata = {
@@ -103,6 +103,33 @@ export default function ProjectsPage() {
                     </ul>
                   </div>
 
+                  {project.designProcess && (
+                    <div className="border-t border-border/50 pt-3 flex flex-col gap-2">
+                      <p className="text-[10px] font-semibold uppercase tracking-wide text-foreground/70">Design Process</p>
+                      <div className="flex flex-col gap-2">
+                        <div>
+                          <p className="text-[10px] font-semibold text-foreground/60 mb-0.5 uppercase tracking-wide">Problem</p>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{project.designProcess.problem}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-semibold text-foreground/60 mb-0.5 uppercase tracking-wide">Approach</p>
+                          <ul className="flex flex-col gap-0.5">
+                            {project.designProcess.approach.map((item, idx) => (
+                              <li key={idx} className="text-xs text-muted-foreground leading-relaxed flex gap-1.5">
+                                <span className="text-primary flex-shrink-0 mt-1 text-[10px]">▸</span>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-semibold text-foreground/60 mb-0.5 uppercase tracking-wide">Outcome</p>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{project.designProcess.outcome}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex flex-wrap gap-1 mt-auto pt-2">
                     {project.tags.map((tag) => (
                       <span key={tag} className="tag-pill px-2 py-0.5 text-[10px] font-mono bg-muted text-muted-foreground rounded-full border border-border">
@@ -178,7 +205,7 @@ export default function ProjectsPage() {
                       <a
                         href={project.githubUrl}
                         target="_blank" rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-foreground transition-colors hover:-translate-y-0.5 hover:translate-x-0.5 transition-transform duration-200"
+                        className="text-muted-foreground hover:text-foreground hover:-translate-y-0.5 hover:translate-x-0.5 transition-all duration-200"
                         aria-label="GitHub"
                       >
                         <ArrowUpRight className="h-4 w-4" />
