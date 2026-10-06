@@ -1,0 +1,12 @@
+{{ define "main" }}
+{{ partial "page-nav.html" . }}
+<main>
+  <article class="wrap article">
+    <div class="kicker">{{ .Date.Format "January 2006" }}{{ with .Params.tag }} · {{ . }}{{ end }}</div>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.summary }}<p class="lead">{{ . }}</p>{{ end }}
+    <div class="prose">{{ .Content }}</div>
+  </article>
+</main>
+{{ partial "footer.html" . }}
+{{ end }}

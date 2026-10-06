@@ -1,0 +1,37 @@
+# Skills map in the About section.
+# areas: the four big glowing points. id is used by skills below, col is the colour.
+# skills: each one joins its area. note appears in the card when the skill is hovered.
+# links: extra lines between skills (or areas) that are used together.
+areas:
+  - { id: design, name: UI/UX design, col: "#8fb2ff", note: Research, user flows and interfaces designed in Figma before development. }
+  - { id: front, name: Frontend, col: "#8fdcb4", note: "Accessible, responsive interfaces in TypeScript, React, Vue and Next.js." }
+  - { id: qa, name: Quality, col: "#ff9cc2", note: "Test plans, unit tests and usability checks before anything ships." }
+  - { id: data, name: Data and mobile, col: "#c3b6ff", note: "Databases, auth and native Android for the apps behind the interfaces." }
+skills:
+  - { name: Figma, area: design, note: Used in CoBunny and my design work }
+  - { name: User research, area: design, note: Interviews and personas before any screen }
+  - { name: User flows, area: design, note: Mapping each path before the layout }
+  - { name: Prototyping, area: design, note: Clickable flows to test ideas early }
+  - { name: Accessibility, area: design, note: "Contrast, focus states and readable type" }
+  - { name: TypeScript, area: front, note: Used in HSRC and TradePro }
+  - { name: Next.js, area: front, note: Used in HSRC and TradePro }
+  - { name: Vue 3, area: front, note: Used in CoBunny }
+  - { name: Tailwind CSS, area: front, note: Used in HSRC and TradePro }
+  - { name: Three.js, area: front, note: Used in HSRC }
+  - { name: "HTML, CSS, JS", area: front, note: Used in MConnect }
+  - { name: Test plans, area: qa, note: Written before features are built }
+  - { name: Unit tests, area: qa, note: Checks for the logic behind each feature }
+  - { name: Usability checks, area: qa, note: Watching real people use the interface }
+  - { name: Supabase, area: data, note: "Used in HSRC, CoBunny and TradePro" }
+  - { name: Kotlin, area: data, note: Used in Happier }
+  - { name: SQLite, area: data, note: Used in Happier }
+  - { name: Solidity, area: data, note: Used in TradePro }
+links:
+  - [Usability checks, User research]
+  - [Accessibility, Frontend]
+  - [Unit tests, TypeScript]
+  - [Supabase, Next.js]
+  - [Vue 3, Supabase]
+  - [Prototyping, Three.js]
+  - [Figma, Vue 3]
+  - [Test plans, User flows]

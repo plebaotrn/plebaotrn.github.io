@@ -1,0 +1,13 @@
+# The five chapters of the scroll story on the home page.
+# Each chapter has a small label (kicker) and one sentence. Words light up as the visitor scrolls.
+# The particle shapes are tied to the order: bunny, portrait, layered interface, bug to check, aperture.
+- kicker: Hello
+  text: Welcome to my page.
+- kicker: Who I am
+  text: I'm Bao Tran, a Software Development student at Swinburne University of Technology.
+- kicker: My story
+  text: This is my story. I design interfaces, build them, and test them until they feel right.
+- kicker: What I care about
+  text: Thoughtful UI/UX, and software that people can trust.
+- kicker: Next
+  text: Here is some of what I've made.

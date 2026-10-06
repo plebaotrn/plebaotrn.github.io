@@ -1,0 +1,11 @@
+{{ define "main" }}
+{{ partial "page-nav.html" . }}
+<main>
+  <section class="wrap article">
+    <div class="kicker">404</div>
+    <h1>This page hopped away.</h1>
+    <p class="lead">The link may be old. Head back to the <a href="{{ site.Home.RelPermalink }}" style="color:var(--accent)">home page</a>.</p>
+  </section>
+</main>
+{{ partial "footer.html" . }}
+{{ end }}

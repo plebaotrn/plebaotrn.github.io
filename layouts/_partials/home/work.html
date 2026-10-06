@@ -1,0 +1,25 @@
+{{- /* Project lens gallery. Projects come from data/projects.yaml; the teaser grid is the fallback without WebGL. */ -}}
+<section class="lens-section" id="work" aria-labelledby="work-title" style="--n: {{ len site.Data.projects }}">
+      <div class="lens-pin">
+        <canvas id="lens" tabindex="0" aria-label="Project gallery. Scroll or drag sideways to browse, press Enter or click to open the project in the middle."></canvas>
+        <div class="lens-ui">
+          <div class="lens-top"><div class="wrap"><div><div class="kicker">Selected work</div><h2 id="work-title">Projects</h2></div><p>Client, university and team projects. Each one started with research and design before development.</p></div></div>
+          <div class="lens-bottom"><div class="wrap">
+            <span class="lens-count" id="lens-count">01 / {{ printf "%02d" (len site.Data.projects) }}</span>
+            <div class="lens-title" aria-live="polite"><b id="lens-title">Project</b><small id="lens-sub"></small></div>
+            <span class="lens-hint">Scroll or drag to explore<br>Click to open</span>
+          </div></div>
+        </div>
+      </div>
+      <div class="wrap lens-fallback">
+        <div class="sec-head"><div><div class="kicker">Selected work</div><h2>Projects</h2></div></div>
+        <div class="teaser">
+          {{- range $i, $p := site.Data.projects }}
+          {{- with resources.Get (printf "images/projects/%s" $p.image) }}
+          {{- $img := .Fit "1400x1400 webp q82" }}
+          <button class="teaser-card" type="button" data-index="{{ $i }}"><img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="Screenshot of {{ $p.title }}" loading="lazy"><span><b>{{ $p.title }}</b><small>{{ $p.type }} · {{ $p.year }}</small></span></button>
+          {{- else }}{{ errorf "Missing project image assets/images/projects/%s" $p.image }}{{ end }}
+          {{- end }}
+        </div>
+      </div>
+    </section>

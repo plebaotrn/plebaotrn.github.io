@@ -1,0 +1,31 @@
+<section class="block" id="focus" aria-labelledby="focus-title">
+      <div class="wrap">
+        <div class="sec-head"><div><div class="kicker">About</div><h2 id="focus-title">What I do</h2></div></div>
+        <div class="focus-grid">
+          <div class="tiles">
+            <div class="tile" data-tilt><div class="bar" style="background:var(--accent)"></div><h3>UI/UX design</h3><p>Research, user flows and interfaces designed in Figma before a line of code is written.</p></div>
+            <div class="tile" data-tilt><div class="bar" style="background:var(--pink)"></div><h3>Quality assurance</h3><p>Test plans, unit tests and usability checks, so features work the way people expect.</p></div>
+            <div class="tile" data-tilt><div class="bar" style="background:var(--ok)"></div><h3>Frontend development</h3><p>Accessible, responsive interfaces with TypeScript, React, Vue and Next.js.</p></div>
+          </div>
+          <div class="term" role="img" aria-label="Terminal printing: how are you doing, mate?">
+            <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>hello.ts</span></div>
+            <div class="term-body" aria-hidden="true">
+              <div class="c">// a small program that says hello</div>
+              <div><span class="k">const</span> greet = (name = <span class="s">"mate"</span>) =&gt;</div>
+              <div>&nbsp;&nbsp;<span class="s">`how are you doing, ${name}?`</span>;</div>
+              <div style="margin-bottom:12px">console.log(greet());</div>
+              <div style="border-top:1px solid var(--line);padding-top:12px"><span class="p">$</span> npx tsx hello.ts</div>
+              <div style="color:var(--text)"><span id="typed">how are you doing, mate?</span><span class="caret"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="skills">
+          <div class="skills-head"><h3>Skills map</h3><p>Drag to turn it. Hover or tab to a skill to see where I used it.</p></div>
+          <div class="skills-stage" id="skills-stage">
+            <canvas id="skills" aria-hidden="true"></canvas>
+            <div class="skill-labels" id="skill-labels"></div>
+            <div class="skill-card" id="skill-card" aria-live="polite"><span class="sc-group" id="sc-group">Four areas</span><strong id="sc-name">UI/UX, frontend, quality, data and mobile</strong><span id="sc-note">Each point is a skill. Lines connect skills I use together.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>

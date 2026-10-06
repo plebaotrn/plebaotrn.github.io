@@ -1,0 +1,12 @@
+{{- /* The three latest posts from content/writing. */ -}}
+{{- $posts := (where site.RegularPages "Section" "writing").ByDate.Reverse }}
+<section class="block" id="writing" aria-labelledby="writing-title">
+  <div class="wrap">
+    <div class="sec-head"><div><div class="kicker">Writing</div><h2 id="writing-title">Recent articles</h2></div>{{ with site.GetPage "/writing" }}<a class="more" href="{{ .RelPermalink }}">All articles ↗</a>{{ end }}</div>
+    <div class="posts">
+      {{- range first 3 $posts }}
+      <a class="post" href="{{ .RelPermalink }}"><span class="date">{{ .Date.Format "Jan 2006" }}</span><span class="title">{{ .Title }}</span><span class="tag">{{ .Params.tag }}</span></a>
+      {{- end }}
+    </div>
+  </div>
+</section>

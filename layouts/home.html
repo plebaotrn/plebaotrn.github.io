@@ -1,0 +1,36 @@
+{{ define "head" }}
+{{- /* Start at the welcome chapter on every load, and mark that motion scripts are running. */ -}}
+<script>document.documentElement.classList.add('js-on'); if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; window.scrollTo(0, 0);</script>
+{{ end }}
+
+{{ define "main" }}
+<canvas id="field" aria-hidden="true"></canvas>
+{{- with resources.Get "images/profile.jpg" }}
+<img id="portrait-src" src="{{ (.Resize "640x webp q85").RelPermalink }}" alt="" hidden>
+{{- end }}
+<div class="cursor" aria-hidden="true"></div>
+
+{{ partial "home/overlays.html" . }}
+{{ partial "home/nav.html" . }}
+
+<main>
+  {{ partial "home/story.html" . }}
+  <div class="solid">
+    {{ partial "home/work.html" . }}
+    {{ partial "home/about.html" . }}
+    {{ partial "home/writing.html" . }}
+    {{ partial "home/contact.html" . }}
+  </div>
+</main>
+{{ partial "footer.html" . }}
+
+{{- /* Data for the scripts: projects for the gallery and detail view, skills for the skills map. */}}
+<script type="application/json" id="projects-data">{{ site.Data.projects | jsonify | safeJS }}</script>
+<script type="application/json" id="skills-data">{{ site.Data.skills | jsonify | safeJS }}</script>
+{{ range slice "three.min.js" "gsap.min.js" "ScrollTrigger.min.js" "lenis.min.js" }}
+<script src="{{ printf "vendor/%s" . | relURL }}"></script>
+{{- end }}
+{{- with resources.Get "js/main.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+{{- end }}
+{{ end }}

@@ -1,0 +1,12 @@
+{{- /* The scroll story. Chapters come from data/story.yaml; each word is wrapped so it can light up. */ -}}
+{{- $chapters := site.Data.story }}
+<section class="story" id="story" aria-label="Introduction" style="--chapters: {{ len $chapters }}">
+  <div class="story-pin">
+    {{- range $chapters }}
+    <article class="chapter"><div class="wrap"><div class="kicker">{{ .kicker }}</div><h2>{{ range $i, $w := split .text " " }}{{ if $i }} {{ end }}<span class="w">{{ $w }}</span>{{ end }}</h2></div></article>
+    {{- end }}
+    <div class="story-hud" aria-hidden="true">
+      <div class="wrap"><span id="chap-num">1 / {{ len $chapters }}</span><span class="track"><span id="chap-bar"></span></span><span class="hint"><span id="hint-text">Scroll to continue</span><i></i></span></div>
+    </div>
+  </div>
+</section>

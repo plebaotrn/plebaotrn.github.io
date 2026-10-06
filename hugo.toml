@@ -1,0 +1,23 @@
+baseURL = "https://plebaotrn.github.io/"
+languageCode = "en"
+title = "Pham Le Bao Tran"
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+
+[params]
+  author = "Pham Le Bao Tran"
+  description = "Software Development student at Swinburne University of Technology, focused on UI/UX design, frontend development and quality assurance."
+  email = "phamtran2082005@gmail.com"
+  linkedin = "https://www.linkedin.com/in/le-bao-tran-pham-016987325/"
+  github = "https://github.com/plebaotrn"
+  available = "I am available for internships from 2026, in frontend development, UI/UX design or quality assurance."
+
+[outputs]
+  home = ["html"]
+  section = ["html", "rss"]
+
+[markup.goldmark.renderer]
+  unsafe = false
+
+[minify]
+  minifyOutput = true

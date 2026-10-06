@@ -1,0 +1,119 @@
+# Projects shown in the lens gallery and the project detail view, in this order.
+# image is a file in assets/images/projects. process and outcome are optional.
+
+- title: HSRC Wholebeing Science
+  image: hsrc.png
+  type: Client project
+  year: '2025'
+  role: Designer and developer
+  timeline: May 2025 to present
+  team: Individual
+  lead: The official bilingual website for the Human Sciences Research Centre in Vietnam.
+  overview: 'HSRC works on Wholebeing Science, an interdisciplinary approach to human flourishing. The site had to serve two audiences at once: Vietnamese researchers who already know the centre, and international partners meeting it for the first time.'
+  did:
+  - Ran research with the HSRC team to define two audiences and map a separate journey for each.
+  - Designed a bilingual interface in Figma with design tokens based on the HSRC brand.
+  - Built an interactive 3D model of the SPIRE framework with Three.js and React Three Fiber.
+  - Developed a Meaning Card wallpaper generator, team profiles and an articles system.
+  stack:
+  - Next.js 15
+  - TypeScript
+  - Tailwind CSS
+  - Three.js
+  - React Three Fiber
+  - Supabase
+  link: https://www.hsrc.vn/
+  linkLabel: Visit hsrc.vn
+
+- title: CoBunny
+  image: cobunny.png
+  type: University project
+  year: '2025'
+  role: Full stack developer
+  timeline: Nov to Dec 2025
+  team: Individual
+  lead: A co-working space booking platform for students and freelancers in Melbourne.
+  overview: 'Existing booking tools were complex and hard to use on a phone. I was responsible for the full product: research, interface design, frontend and backend integration.'
+  did:
+  - Designed the booking flow end to end, from interface to backend.
+  - Designed responsive screens in Figma before development.
+  - Integrated a real time Supabase backend for persistent storage.
+  process:
+  - Interviewed three university students about how they find and book study spaces.
+  - 'Mapped the journey: discover, compare, book and manage.'
+  - 'Identified the problems: too many steps, unclear availability and no booking history.'
+  - Designed every screen in Figma, from wireframes to high fidelity.
+  - Tested the prototype and reduced the booking flow from five steps to three.
+  outcome: A clear, mobile friendly booking experience with real time availability and booking history. Test participants described the final flow as straightforward.
+  stack:
+  - Vue 3
+  - Bootstrap 5
+  - Vite
+  - Supabase
+  - Figma
+  link: https://github.com/plebaotrn
+  linkLabel: Source on GitHub
+
+- title: Happier
+  image: happier.png
+  type: University project
+  year: '2025'
+  role: Mobile developer
+  timeline: Nov to Dec 2025
+  team: Individual
+  lead: An Android app for building positive daily routines.
+  overview: Happier helps people build habits with daily check-ins, streaks and progress over time. It works fully offline.
+  did:
+  - Designed every screen with a focus on clarity and ease of daily use.
+  - Implemented a local SQLite database for offline first habit tracking.
+  - Used LiveData with ViewModel for reactive, lifecycle aware state.
+  stack:
+  - Kotlin
+  - Android Studio
+  - SQLite
+  - LiveData
+  link: https://github.com/plebaotrn
+  linkLabel: Source on GitHub
+
+- title: TradePro
+  image: tradepro.png
+  type: Team project
+  year: '2025'
+  role: Frontend developer
+  timeline: Jan to Mar 2025
+  team: Team
+  lead: A prototype blockchain asset trading platform with an analytics dashboard.
+  overview: A team project exploring how trading data can be made readable for newcomers. I led the interface design and the frontend structure.
+  did:
+  - Led UI/UX design across all pages and set the visual language.
+  - Built the search, filter and sorting system for asset listings.
+  - Defined the frontend component architecture for the team.
+  stack:
+  - Next.js
+  - TypeScript
+  - Tailwind CSS
+  - Supabase
+  - Solidity
+  - Hardhat
+  link: https://github.com/plebaotrn
+  linkLabel: Source on GitHub
+
+- title: MConnect
+  image: mconnect.jpg
+  type: Team project
+  year: '2025'
+  role: Frontend developer
+  timeline: May to Jul 2025
+  team: Team
+  lead: A professional networking platform with profiles, search and authentication.
+  overview: Built without a framework, MConnect focused on clean interaction design and a dependable login flow.
+  did:
+  - Designed and implemented the full interface from scratch.
+  - Built a dynamic search and filter system for user profiles.
+  - Coded the complete login and authentication flow.
+  stack:
+  - JavaScript
+  - HTML
+  - CSS
+  link: https://github.com/plebaotrn
+  linkLabel: Source on GitHub
