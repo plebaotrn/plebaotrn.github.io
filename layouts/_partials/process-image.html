@@ -1,0 +1,5 @@
+{{- /* Turns an image resource into a web ready WebP: shrinks wide images to 1400px, never enlarges small ones.
+     Returns src, width, height and tall (portrait images such as phone screenshots). */ -}}
+{{- $r := . -}}
+{{- if gt .Width 1400 }}{{ $r = .Resize "1400x webp q82" }}{{ else }}{{ $r = .Process "webp q82" }}{{ end -}}
+{{- return dict "src" $r.RelPermalink "width" $r.Width "height" $r.Height "tall" (gt $r.Height $r.Width) -}}

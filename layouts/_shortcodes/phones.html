@@ -1,0 +1,13 @@
+{{- /* A row of phone screenshots. Each argument is "path|caption", for example
+     {{< phones "images/projects/happier/today.png|Today tab" "images/projects/happier/weekly.png|Weekly tab" >}} */ -}}
+<div class="phones">
+{{- range .Params }}
+{{- $parts := split . "|" }}
+{{- $src := index $parts 0 }}
+{{- $caption := cond (gt (len $parts) 1) (index $parts 1) "" }}
+{{- with or ($.Page.Resources.Get $src) (resources.Get $src) }}
+{{- $p := partial "process-image.html" . }}
+<figure><img src="{{ $p.src }}" width="{{ $p.width }}" height="{{ $p.height }}" alt="{{ $caption }}" loading="lazy">{{ with $caption }}<figcaption>{{ . }}</figcaption>{{ end }}</figure>
+{{- else }}{{ errorf "phones shortcode: missing image %s" $src }}{{ end }}
+{{- end }}
+</div>

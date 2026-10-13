@@ -859,6 +859,7 @@
     let main = `<section><h2>Overview</h2><p>${p.overview}</p></section><section><h2>What I did</h2><ul>${p.did.map((x) => `<li>${x}</li>`).join('')}</ul></section>`;
     if (p.process) main += `<section><h2>Process</h2><ol>${p.process.map((x) => `<li>${x}</li>`).join('')}</ol></section>`;
     if (p.outcome) main += `<section><h2>Outcome</h2><p>${p.outcome}</p></section>`;
+    if (p.gallery) main += `<section><h2>Screens</h2><div class="shots${p.gallery.every((s) => s.tall) ? ' phones' : ''}">${p.gallery.map((s) => `<figure><img src="${s.src}" width="${s.width}" height="${s.height}" alt="${s.caption}" loading="lazy"><figcaption>${s.caption}</figcaption></figure>`).join('')}</div></section>`;
     document.getElementById('d-main').innerHTML = main;
     document.getElementById('d-side').innerHTML = `<div class="side-box"><h3>Technology</h3><div class="chips">${p.stack.map((s) => `<span>${s}</span>`).join('')}</div></div><a class="btn" href="${p.link}" target="_blank" rel="noopener">${p.linkLabel} ↗</a>`;
     const prev = (i - 1 + N) % N, next = (i + 1) % N, pb = document.getElementById('d-prev'), nb = document.getElementById('d-next');
@@ -877,16 +878,26 @@
     document.body.classList.add('locked'); if (lenis) lenis.stop();
     if (fromLens && lens) lens.dive(i, showDetail); else showDetail();
   }
-  function closeDetail() {
+  function closeDetail(then) {
     gsap.to(detailEl, { opacity: 0, duration: 0.35, onComplete: () => {
       detailEl.classList.remove('is-open'); backBtn.classList.remove('is-shown');
       document.body.classList.remove('locked'); if (lenis) lenis.start();
       if (lens) lens.reset();
-      lensCanvas.focus({ preventScroll: true });
+      if (typeof then === 'function') then(); else lensCanvas.focus({ preventScroll: true });
     } });
   }
   document.addEventListener('click', (e) => { const c = e.target.closest('.teaser-card'); if (c) openProject(+c.dataset.index, false); });
-  backBtn.addEventListener('click', closeDetail);
+  backBtn.addEventListener('click', () => closeDetail());
+  // the nav stays above the detail view, so its links close the detail first and then scroll to their section
+  document.getElementById('nav').addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || !detailEl.classList.contains('is-open')) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    closeDetail(() => {
+      const el = document.querySelector(a.getAttribute('href')); if (!el) return;
+      if (lenis) lenis.scrollTo(el, { offset: -60, immediate: true, force: true }); else el.scrollIntoView();
+    });
+  }, true);
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && detailEl.classList.contains('is-open')) closeDetail(); });
 
   if (reduce) return;

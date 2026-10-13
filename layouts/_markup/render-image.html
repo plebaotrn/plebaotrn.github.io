@@ -1,0 +1,17 @@
+{{- /* Markdown images: look in the page bundle first, then in assets. The title becomes the caption.
+     Standalone images get a <figure>; images inside a sentence stay a plain <img>. Portrait images get a narrower figure. */ -}}
+{{- $src := .Destination -}}
+{{- $alt := .PlainText | htmlUnescape | htmlEscape -}}
+{{- $img := or (.Page.Resources.Get $src) (resources.Get $src) -}}
+{{- $tag := printf `<img src="%s" alt="%s" loading="lazy">` $src $alt -}}
+{{- $tall := false -}}
+{{- with $img -}}
+{{- $p := partial "process-image.html" . -}}
+{{- $tall = $p.tall -}}
+{{- $tag = printf `<img src="%s" width="%d" height="%d" alt="%s" loading="lazy">` $p.src $p.width $p.height $alt -}}
+{{- end -}}
+{{- if .IsBlock -}}
+<figure{{ if $tall }} class="tall"{{ end }}>{{ $tag | safeHTML }}{{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}</figure>
+{{- else -}}
+{{ $tag | safeHTML }}
+{{- end -}}

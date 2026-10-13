@@ -8,19 +8,21 @@
   role: Designer and developer
   timeline: May 2025 to present
   team: Individual
-  lead: The official bilingual website for the Human Sciences Research Centre in Vietnam.
-  overview: 'HSRC works on Wholebeing Science, an interdisciplinary approach to human flourishing. The site had to serve two audiences at once: Vietnamese researchers who already know the centre, and international partners meeting it for the first time.'
+  lead: The official website for the Human Sciences Research Centre in Vietnam, in both Vietnamese and English.
+  overview: "HSRC studies Wholebeing Science, which is about how people live well and feel well. The site needed to work for two groups: Vietnamese researchers who already know HSRC, and international partners who are meeting it for the first time. The first group wanted more detail, the second needed more background. I designed and built the whole site to serve both."
   did:
-  - Ran research with the HSRC team to define two audiences and map a separate journey for each.
-  - Designed a bilingual interface in Figma with design tokens based on the HSRC brand.
-  - Built an interactive 3D model of the SPIRE framework with Three.js and React Three Fiber.
-  - Developed a Meaning Card wallpaper generator, team profiles and an articles system.
+  - Worked with the HSRC team to understand the two audiences and plan a separate path through the site for each.
+  - Designed the interface in Figma in Vietnamese and English, using colours and type taken from the HSRC brand. Some sections show content in a different order for each language, because each audience starts from a different place.
+  - Built the landing page around a 3D lotus made with Three.js. Its five petals stand for the five parts of SPIRE, and they float apart and come back together as you scroll.
+  - Built the Meaning Card tool, where you answer a few questions and get a personal phone wallpaper.
+  - Built the Happiness Map, a short 13 question quiz that shows where you stand on the five SPIRE pillars, with charts for your results.
+  - Added team profiles and an articles section on Supabase, so the team can post news on their own.
+  outcome: The site is live at hsrc.vn, works in two languages, and I keep adding to it as HSRC grows.
   stack:
   - Next.js 15
   - TypeScript
   - Tailwind CSS
   - Three.js
-  - React Three Fiber
   - Supabase
   link: https://www.hsrc.vn/
   linkLabel: Visit hsrc.vn
@@ -32,26 +34,44 @@
   role: Full stack developer
   timeline: Nov to Dec 2025
   team: Individual
-  lead: A co-working space booking platform for students and freelancers in Melbourne.
-  overview: 'Existing booking tools were complex and hard to use on a phone. I was responsible for the full product: research, interface design, frontend and backend integration.'
+  lead: A booking site for coworking spaces, made for students and freelancers in Melbourne.
+  overview: "Booking a desk to study should be quick. The tools I tried had too many steps, unclear availability and no easy way to see past bookings. I built CoBunny on my own for my Interface Design and Development unit: you browse spaces, look at the details, sign in and book. Then you can view, edit or cancel your booking from one dashboard."
   did:
-  - Designed the booking flow end to end, from interface to backend.
-  - Designed responsive screens in Figma before development.
-  - Integrated a real time Supabase backend for persistent storage.
+  - Designed every screen in Figma before writing any code, so each part had a clear job from the start.
+  - Built a browse page with search, filters for location, price and size, sorting and a favourites heart on every space.
+  - Built a details page for each space with photos, features, size, price and location, so people have everything they need before they book.
+  - Wrote my own sign in and sign up logic as a reusable Vue composable, and protected the dashboard and booking pages so only signed in users can open them.
+  - Kept all booking data in one Pinia store, so the booking form and the dashboard always show the same thing.
+  - Built a dashboard with upcoming, past and cancelled bookings, plus quick stats like total bookings and money spent. The edit form fills in your old details, so you only change what you need.
   process:
-  - Interviewed three university students about how they find and book study spaces.
-  - 'Mapped the journey: discover, compare, book and manage.'
-  - 'Identified the problems: too many steps, unclear availability and no booking history.'
-  - Designed every screen in Figma, from wireframes to high fidelity.
-  - Tested the prototype and reduced the booking flow from five steps to three.
-  outcome: A clear, mobile friendly booking experience with real time availability and booking history. Test participants described the final flow as straightforward.
+  - Talked to three university students about how they find and book study spaces.
+  - 'Mapped the steps: find, compare, book and manage.'
+  - Designed every screen in Figma, from rough sketches to the final look, and cut the booking flow from five steps to three.
+  - Built the basic pages first with sample data, then added accounts, bookings and the dashboard.
+  - At first I passed booking data from page to page by hand. It got messy fast, so I moved it into a shared Pinia store and the problem went away.
+  - The first version saved everything in the browser. After the unit I moved sign in and bookings to Supabase, so data now works across devices.
+  outcome: "A simple booking site that works well on phones and covers the full journey, from finding a space to managing your bookings. My biggest lesson: pick one styling tool and stick with it. I used both Bootstrap and Tailwind, and they kept fighting each other."
+  gallery:
+  - src: cobunny/designsytem.png
+    caption: The design system in Figma. Colours, type sizes, icons and the CoBunny logo, all set before any code.
+  - src: cobunny/wireframe.png
+    caption: Every page and shared part laid out in Figma, from the home page to the three booking steps.
+  - src: cobunny/browse.png
+    caption: Browse page with search, filters and sorting. The heart adds a space to your favourites.
+  - src: cobunny/space-details.png
+    caption: Each space has its own page with photos, price, rating and features.
+  - src: cobunny/booking-form.png
+    caption: The booking form shows a live summary and total price next to your choices.
   stack:
   - Vue 3
+  - Pinia
+  - Vue Router
   - Bootstrap 5
+  - Tailwind CSS
   - Vite
   - Supabase
   - Figma
-  link: https://github.com/plebaotrn
+  link: https://github.com/plebaotrn/CoBunny-web
   linkLabel: Source on GitHub
 
 - title: Happier
@@ -61,18 +81,44 @@
   role: Mobile developer
   timeline: Nov to Dec 2025
   team: Individual
-  lead: An Android app for building positive daily routines.
-  overview: Happier helps people build habits with daily check-ins, streaks and progress over time. It works fully offline.
+  lead: An Android app that helps you build good habits, one day at a time.
+  overview: "Starting a habit is easy. Keeping it going is the hard part. Most habit apps I tried felt like too much work, so I built Happier for my mobile development unit: a simple Android app where you can tick off a habit in a few taps, see your progress at a glance, and get a small push when you need it. It works fully offline, so it is always ready when you are."
   did:
-  - Designed every screen with a focus on clarity and ease of daily use.
-  - Implemented a local SQLite database for offline first habit tracking.
-  - Used LiveData with ViewModel for reactive, lifecycle aware state.
+  - Designed a warm orange look with big cards and large buttons that are easy to tap with one thumb.
+  - Built a home screen with three tabs, Today, Weekly and Overall, so you can look at your habits in different ways.
+  - Built a weekly view with a circle for each day. Forgot to tick yesterday? Just tap that day.
+  - Stored everything on the phone with Room, using a separate table for each completed day so streaks and weekly views stay accurate.
+  - Used the MVVM pattern with ViewModel and LiveData, so the screen updates the moment you tick off a habit.
+  - Added a home screen widget with today's progress, swipe to delete with an undo button, and encouraging messages that change with your progress.
+  process:
+  - Wrote user stories first, like a busy student who wants to tick off a habit in seconds, or someone who wants a widget so they never need to open the app.
+  - Planned the screens and the database before writing any code.
+  - Started by counting only the total days done, then added a table that records each day, so the weekly view and streaks could work properly.
+  - Tested on a Pixel 6 emulator and fixed bugs along the way, like progress going above 100 percent and days not matching because of different times.
+  - Built the app in about 30 hours over two weeks.
+  outcome: A friendly habit tracker that covers the full journey, from creating a habit to checking it off from your home screen. The biggest lesson was to plan first. Drawing the screens and the database before coding saved me a lot of time later.
+  gallery:
+  - src: happier/today.png
+    caption: The Today tab with your habits for the day.
+  - src: happier/weekly.png
+    caption: The Weekly tab. Tap any day to mark it done.
+  - src: happier/overall.png
+    caption: The Overall tab with your stats in one place.
+  - src: happier/add-habit.png
+    caption: Creating a habit with your own icon and colour.
+  - src: happier/habit-detail.png
+    caption: Each habit has its own page with streaks and progress.
+  - src: happier/widget.png
+    caption: The home screen widget shows today at a glance.
   stack:
   - Kotlin
   - Android Studio
+  - Room
   - SQLite
   - LiveData
-  link: https://github.com/plebaotrn
+  - Coroutines
+  - Material Design 3
+  link: https://github.com/plebaotrn/Happier_Habit_Tracker
   linkLabel: Source on GitHub
 
 - title: TradePro
@@ -81,13 +127,15 @@
   year: '2025'
   role: Frontend developer
   timeline: Jan to Mar 2025
-  team: Team
-  lead: A prototype blockchain asset trading platform with an analytics dashboard.
-  overview: A team project exploring how trading data can be made readable for newcomers. I led the interface design and the frontend structure.
+  team: Team of five
+  lead: A test trading platform for digital assets and NFTs, designed to be easy for beginners.
+  overview: "Trading screens often feel crowded and confusing. Our team of five wanted to make trading data easier to read for people who are new to it. I led the interface design and the frontend structure, while my teammates focused on the smart contracts and data."
   did:
-  - Led UI/UX design across all pages and set the visual language.
-  - Built the search, filter and sorting system for asset listings.
-  - Defined the frontend component architecture for the team.
+  - Led the design across the platform and set the overall look, starting with the navigation bar.
+  - Built search, filters and sorting for the market page, so users can find an asset quickly.
+  - Designed the asset details popup, the create asset page and the personal assets page.
+  - Worked on NFT collections, so users can group their assets in one place.
+  - Planned how the frontend was split into parts, so five people could work at the same time without getting in each other's way.
   stack:
   - Next.js
   - TypeScript
@@ -95,25 +143,30 @@
   - Supabase
   - Solidity
   - Hardhat
-  link: https://github.com/plebaotrn
+  link: https://github.com/plebaotrn/Project_TradePro
   linkLabel: Source on GitHub
 
 - title: MConnect
   image: mconnect.jpg
   type: Team project
   year: '2025'
-  role: Frontend developer
-  timeline: May to Jul 2025
-  team: Team
-  lead: A professional networking platform with profiles, search and authentication.
-  overview: Built without a framework, MConnect focused on clean interaction design and a dependable login flow.
+  role: Designer and developer
+  timeline: May to Aug 2025
+  team: Team of three
+  lead: A networking site for professionals, where people can join communities, share posts and build a profile.
+  overview: "MConnect was built with plain JavaScript, without frameworks like React or Vue, on an Express and SQLite backend. Our team of three split the work by feature. I designed the first version of the main pages and then built the parts people touch every day: signing in, liking posts and editing their profile."
   did:
-  - Designed and implemented the full interface from scratch.
-  - Built a dynamic search and filter system for user profiles.
-  - Coded the complete login and authentication flow.
+  - Designed and built the first version of the home, community, login and sign up pages, with styles organised in SCSS.
+  - Built the login and sign up forms with clear password rules and helpful error messages, and switched sign in from usernames to email.
+  - Made the header a shared component that loads on every page, so a change only needs to be made once.
+  - Built the like feature from the database to the button, so posts show likes straight away.
+  - Built the profile page, where people can edit their details and upload an avatar, plus the check that only lets signed in users make changes.
+  - Handled photo sizes for avatars and post images, so large uploads don't slow the site down.
   stack:
   - JavaScript
   - HTML
-  - CSS
-  link: https://github.com/plebaotrn
+  - SCSS
+  - Express
+  - SQLite
+  link: https://github.com/Pandazelf/COS20031-May-Group-1
   linkLabel: Source on GitHub
