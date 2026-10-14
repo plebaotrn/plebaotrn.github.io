@@ -1,0 +1,10 @@
+{{- /* One page per project in data/projects.yaml, at /projects/<slug>/. The yaml entry becomes the page params. */ -}}
+{{- range $i, $p := site.Data.projects }}
+  {{- $.AddPage (dict
+    "path" $p.slug
+    "title" $p.title
+    "kind" "page"
+    "weight" (add $i 1)
+    "params" (merge $p (dict "summary" $p.lead))
+  ) }}
+{{- end }}

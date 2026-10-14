@@ -1,0 +1,43 @@
+{{ define "main" }}
+{{ partial "topbar.html" . }}
+{{- $posts := (where site.RegularPages "Section" "writing").ByDate.Reverse }}
+{{- $i := 0 }}{{ range $k, $v := $posts }}{{ if eq $v $ }}{{ $i = $k }}{{ end }}{{ end }}
+{{- $newer := cond (gt $i 0) (index $posts (sub $i 1)) false }}
+{{- $older := cond (lt (add $i 1) (len $posts)) (index $posts (add $i 1)) false }}
+<main class="view wrap enter">
+  <a class="back" href="{{ .Parent.RelPermalink }}">← All writing</a>
+  <header class="post-head">
+    <div class="kicker">{{ .Params.tag }}</div>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.summary }}<p class="lede">{{ . }}</p>{{ end }}
+    <div class="byline">
+      <span class="who">{{ with resources.Get "images/profile.jpg" }}<img src="{{ (.Fill "64x64 Center webp q80").RelPermalink }}" width="28" height="28" alt="">{{ end }}{{ site.Params.author }}</span>
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 Jan 2006" }}</time>
+      <span>{{ .ReadingTime }} min read</span>
+    </div>
+  </header>
+  <div class="post-layout">
+    <article class="prose" id="prose">{{ .Content }}</article>
+    <aside class="aside">
+      {{- /* The related project: project: <slug> in front matter, or the project whose post in projects.yaml points here. */}}
+      {{- $page := . }}
+      {{- $proj := false }}
+      {{- with .Params.project }}{{ $proj = site.GetPage (printf "/projects/%s" .) }}{{ end }}
+      {{- if not $proj }}{{ range (site.GetPage "/projects").Pages }}{{ $pr := . }}{{ with .Params.post }}{{ if eq (site.GetPage .) $page }}{{ $proj = $pr }}{{ end }}{{ end }}{{ end }}{{ end }}
+      {{- with $proj }}
+      {{- $img := partial "project-image.html" (dict "page" . "size" "thumb") }}
+      <span class="lbl">From the project</span>
+      <a class="related" href="{{ .RelPermalink }}"><img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt=""><div><b>{{ .Title }}</b><small>{{ .Params.type }} · {{ .Params.year }}</small></div></a>
+      {{- end }}
+      <span class="lbl">Share</span>
+      <div class="share"><button class="btn" type="button" id="copy-link" data-url="{{ .Permalink }}">Copy link</button></div>
+    </aside>
+  </div>
+  <nav class="pager" aria-label="More articles">
+    {{- with $older }}<a href="{{ .RelPermalink }}"><small>← Older</small><b>{{ .Title }}</b></a>{{ else }}<span class="none"></span>{{ end }}
+    {{- with $newer }}<a href="{{ .RelPermalink }}"><small>Newer →</small><b>{{ .Title }}</b></a>{{ else }}<span class="none"></span>{{ end }}
+  </nav>
+</main>
+{{ partial "footer.html" . }}
+{{ partial "pages-scripts.html" . }}
+{{ end }}

@@ -1,0 +1,61 @@
+{{ define "main" }}
+{{ partial "topbar.html" . }}
+{{- $projects := .Pages.ByWeight }}
+{{- $types := slice }}
+{{- range $projects }}{{ $types = $types | append (replace .Params.type " project" "") }}{{ end }}
+{{- $types = uniq $types }}
+<main class="view wrap enter">
+  <section class="intro">
+    <div class="kicker">{{ .Params.kicker }}</div>
+    <h1>{{ .Title }}<sup>{{ printf "%02d" (len $projects) }}</sup></h1>
+    <p class="lede">{{ .Params.summary }}</p>
+  </section>
+
+  <div class="toolbar">
+    <div class="chips" role="group" aria-label="Filter by project type">
+      <button class="chip" type="button" data-filter="All" aria-pressed="true">All <b>{{ len $projects }}</b></button>
+      {{- range $types }}
+      {{- $t := . }}
+      <button class="chip" type="button" data-filter="{{ $t }}" aria-pressed="false">{{ $t }} <b>{{ len (where $projects "Params.type" (printf "%s project" $t)) }}</b></button>
+      {{- end }}
+    </div>
+    <div class="toggle" role="group" aria-label="Layout">
+      <button type="button" data-view="list" aria-pressed="true">Index</button>
+      <button type="button" data-view="grid" aria-pressed="false">Grid</button>
+    </div>
+  </div>
+
+  <ol class="index" id="index">
+    {{- range $projects }}
+    {{- $card := partial "project-image.html" (dict "page" . "size" "card") }}
+    {{- $thumb := partial "project-image.html" (dict "page" . "size" "thumb") }}
+    <li data-type="{{ replace .Params.type " project" "" }}"><a class="row" href="{{ .RelPermalink }}" data-preview="{{ $card.RelPermalink }}">
+      <img class="thumb" src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" alt="" loading="lazy">
+      <span class="yr">{{ .Params.year }}</span>
+      <span class="t">{{ .Title }}</span>
+      <span class="l">{{ .Params.lead }}</span>
+      <span class="r">{{ .Params.role }}<small>{{ replace .Params.type " project" "" }} · {{ .Params.team }}</small></span>
+      <span class="go" aria-hidden="true">↗</span>
+    </a></li>
+    {{- end }}
+  </ol>
+
+  <div class="grid" id="grid" hidden>
+    {{- range $projects }}
+    {{- $card := partial "project-image.html" (dict "page" . "size" "card") }}
+    <a class="card-p" href="{{ .RelPermalink }}" data-type="{{ replace .Params.type " project" "" }}" data-tilt>
+      <div class="media"><img src="{{ $card.RelPermalink }}" width="{{ $card.Width }}" height="{{ $card.Height }}" alt="Screenshot of {{ .Title }}" loading="lazy"></div>
+      <div class="meta">
+        <span class="sub">{{ .Params.type }} · {{ .Params.year }}</span>
+        <h3>{{ .Title }}</h3>
+        <p>{{ .Params.lead }}</p>
+        <div class="stack">{{ range first 4 .Params.stack }}<span class="tag">{{ . }}</span>{{ end }}</div>
+      </div>
+    </a>
+    {{- end }}
+  </div>
+</main>
+<div class="preview" id="preview" aria-hidden="true"><div class="card"><img id="preview-img" alt=""></div></div>
+{{ partial "footer.html" . }}
+{{ partial "pages-scripts.html" . }}
+{{ end }}

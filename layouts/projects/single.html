@@ -1,0 +1,78 @@
+{{ define "main" }}
+{{ partial "topbar.html" . }}
+{{- /* One project, built from its entry in data/projects.yaml (see content/projects/_content.gotmpl). */ -}}
+{{- $p := .Params }}
+{{- $img := partial "project-image.html" (dict "page" . "size" "card") }}
+{{- $all := .Parent.Pages.ByWeight }}
+{{- $i := 0 }}{{ range $k, $v := $all }}{{ if eq $v $ }}{{ $i = $k }}{{ end }}{{ end }}
+{{- $next := index $all (mod (add $i 1) (len $all)) }}
+{{- /* The related article: the post set in projects.yaml, or a writing page with project: <slug> in its front matter. */}}
+{{- $post := false }}
+{{- with $p.post }}{{ $post = site.GetPage . }}{{ end }}
+{{- if not $post }}{{ range first 1 (where (where site.RegularPages "Section" "writing") "Params.project" $p.slug) }}{{ $post = . }}{{ end }}{{ end }}
+{{- /* Screenshots from gallery in projects.yaml. When every shot is portrait they sit side by side like phones. */}}
+{{- $shots := slice }}
+{{- range $p.gallery }}
+{{- $caption := .caption }}
+{{- with resources.Get (printf "images/projects/%s" .src) }}
+{{- $shots = $shots | append (merge (partial "process-image.html" .) (dict "caption" $caption)) }}
+{{- else }}{{ errorf "Missing gallery image assets/images/projects/%s" .src }}{{ end }}
+{{- end }}
+{{- $phones := true }}{{ range $shots }}{{ if not .tall }}{{ $phones = false }}{{ end }}{{ end }}
+<main class="view wrap enter">
+  <a class="back" href="{{ .Parent.RelPermalink }}">← All projects</a>
+  <header class="case-head">
+    <div class="kicker">{{ $p.type }} · {{ $p.year }}</div>
+    <h1>{{ .Title }}</h1>
+    <p class="lede">{{ $p.lead }}</p>
+  </header>
+  <figure class="case-hero" id="hero"><img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="Screenshot of {{ .Title }}"></figure>
+  <dl class="facts">
+    <div><dt>Role</dt><dd>{{ $p.role }}</dd></div>
+    <div><dt>Timeline</dt><dd>{{ $p.timeline }}</dd></div>
+    <div><dt>Team</dt><dd>{{ $p.team }}</dd></div>
+    <div><dt>Built with</dt><dd>{{ delimit (first 3 $p.stack) ", " }}{{ if gt (len $p.stack) 3 }} +{{ sub (len $p.stack) 3 }}{{ end }}</dd></div>
+  </dl>
+  <div class="case-body">
+    <nav class="toc" aria-label="On this page">
+      <span>On this page</span>
+      <a href="#s-overview" data-sec="overview">Overview</a>
+      <a href="#s-did" data-sec="did">What I did</a>
+      {{- with $p.process }}<a href="#s-process" data-sec="process">Process</a>{{ end }}
+      {{- with $p.outcome }}<a href="#s-outcome" data-sec="outcome">Outcome</a>{{ end }}
+      {{- with $shots }}<a href="#s-screens" data-sec="screens">Screens</a>{{ end }}
+      <a href="#s-stack" data-sec="stack">Stack</a>
+    </nav>
+    <article>
+      <section id="s-overview"><h2>Overview</h2><p>{{ $p.overview }}</p></section>
+      <section id="s-did"><h2>What I did</h2><ul class="did">{{ range $p.did }}<li>{{ . }}</li>{{ end }}</ul></section>
+      {{- with $p.process }}
+      <section id="s-process"><h2>Process</h2><ol class="steps">{{ range . }}<li><span>{{ . }}</span></li>{{ end }}</ol></section>
+      {{- end }}
+      {{- with $p.outcome }}
+      <section id="s-outcome"><h2>Outcome</h2><div class="outcome"><p>{{ . }}</p></div></section>
+      {{- end }}
+      {{- with $shots }}
+      <section id="s-screens"><h2>Screens</h2>
+        <div class="shots{{ if $phones }} phones{{ end }}">
+          {{- range . }}
+          <figure><img src="{{ .src }}" width="{{ .width }}" height="{{ .height }}" alt="{{ .caption }}" loading="lazy"><figcaption>{{ .caption }}</figcaption></figure>
+          {{- end }}
+        </div>
+      </section>
+      {{- end }}
+      <section id="s-stack"><h2>Stack</h2>
+        <div class="stack">{{ range $p.stack }}<span class="tag">{{ . }}</span>{{ end }}</div>
+        <div class="case-cta">
+          <a class="btn btn-solid" href="{{ $p.link }}" target="_blank" rel="noopener">{{ $p.linkLabel }} ↗</a>
+          {{- with $post }}<a class="btn" href="{{ .RelPermalink }}">Read the article</a>{{ end }}
+        </div>
+      </section>
+    </article>
+  </div>
+  {{- $nimg := partial "project-image.html" (dict "page" $next "size" "thumb") }}
+  <nav class="next" aria-label="Next project"><a href="{{ $next.RelPermalink }}"><span><small>Next project</small><strong>{{ $next.Title }}</strong></span><img src="{{ $nimg.RelPermalink }}" alt="" loading="lazy"></a></nav>
+</main>
+{{ partial "footer.html" . }}
+{{ partial "pages-scripts.html" . }}
+{{ end }}

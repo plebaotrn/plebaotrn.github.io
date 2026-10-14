@@ -1,0 +1,6 @@
+{{- /* Returns a processed project screenshot. Pass the project page; size is "card" or "thumb". */ -}}
+{{- $img := resources.Get (printf "images/projects/%s" .page.Params.image) }}
+{{- if not $img }}{{ errorf "Missing project image assets/images/projects/%s" .page.Params.image }}{{ end }}
+{{- $out := $img.Fit "1400x1400 webp q82" }}
+{{- if eq .size "thumb" }}{{ $out = $img.Fill "480x360 Top webp q80" }}{{ end }}
+{{- return $out }}

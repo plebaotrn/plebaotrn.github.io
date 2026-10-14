@@ -24,22 +24,11 @@
 </main>
 {{ partial "footer.html" . }}
 
-{{- /* Data for the scripts: projects for the gallery and detail view, skills for the skills map.
-     Each project's optional gallery is resized here so the detail view gets ready to use URLs. */}}
+{{- /* Data for the scripts: projects for the lens gallery (title, type, year and the page each one opens), skills for the skills map. */}}
 {{- $projects := slice }}
 {{- range site.Data.projects }}
-{{- $p := . }}
-{{- with .gallery }}
-{{- $shots := slice }}
-{{- range . }}
-{{- $caption := .caption }}
-{{- with resources.Get (printf "images/projects/%s" .src) }}
-{{- $shots = $shots | append (merge (partial "process-image.html" .) (dict "caption" $caption)) }}
-{{- else }}{{ errorf "Missing gallery image assets/images/projects/%s" .src }}{{ end }}
-{{- end }}
-{{- $p = merge $p (dict "gallery" $shots) }}
-{{- end }}
-{{- $projects = $projects | append $p }}
+{{- $url := (site.GetPage (printf "/projects/%s" .slug)).RelPermalink }}
+{{- $projects = $projects | append (dict "title" .title "type" .type "year" .year "url" $url) }}
 {{- end }}
 <script type="application/json" id="projects-data">{{ $projects | jsonify | safeJS }}</script>
 <script type="application/json" id="skills-data">{{ site.Data.skills | jsonify | safeJS }}</script>

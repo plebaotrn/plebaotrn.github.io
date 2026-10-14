@@ -1,4 +1,4 @@
-{{- /* Loader, the sound gate, and the project detail view that opens from the lens gallery. */ -}}
+{{- /* Loader and the sound gate. Projects open on their own pages under /projects/. */ -}}
 <div class="overlay loader" id="loader" aria-hidden="true">
   <div class="loader-row">
     <div class="loader-num" id="loader-num">0</div>
@@ -26,19 +26,3 @@
     </div>
   </div>
 </div>
-
-<div class="view detail" id="detail" data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="d-title">
-  <div class="detail-hero"><img id="d-img" alt=""></div>
-  <div class="wrap detail-head">
-    <div class="kicker" id="d-kicker"></div>
-    <h1 id="d-title"></h1>
-    <p class="lead" id="d-lead"></p>
-    <dl class="meta" id="d-meta"></dl>
-  </div>
-  <div class="wrap detail-body">
-    <div id="d-main"></div>
-    <aside class="side" id="d-side"></aside>
-  </div>
-  <div class="wrap detail-nav"><button class="btn" type="button" id="d-prev"></button><button class="btn" type="button" id="d-next"></button></div>
-</div>
-<button class="btn back" type="button" id="back">← Back to projects</button>

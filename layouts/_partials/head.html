@@ -19,8 +19,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
-{{- with resources.Get "css/main.css" | minify | fingerprint }}
+{{- /* The home page has its own motion stylesheet; every other page uses pages.css. */}}
+{{- $css := cond .IsHome "css/main.css" "css/pages.css" }}
+{{- with resources.Get $css | minify | fingerprint }}
 <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end }}
+{{- if not .IsHome }}
+<script>document.documentElement.classList.add('js');</script>
 {{- end }}
 {{- with .OutputFormats.Get "rss" }}
 <link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }}">

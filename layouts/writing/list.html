@@ -1,0 +1,51 @@
+{{ define "main" }}
+{{ partial "topbar.html" . }}
+{{- $posts := .Pages.ByDate.Reverse }}
+{{- $tags := slice }}
+{{- range $posts }}{{ with .Params.tag }}{{ $tags = $tags | append . }}{{ end }}{{ end }}
+{{- $tags = uniq $tags }}
+<main class="view wrap enter">
+  <section class="intro">
+    <div class="kicker">{{ .Params.kicker }}</div>
+    <h1>{{ .Title }}<sup>{{ printf "%02d" (len $posts) }}</sup></h1>
+    <p class="lede">{{ .Params.summary }}</p>
+  </section>
+
+  <div class="toolbar">
+    <div class="chips" role="group" aria-label="Filter by topic">
+      <button class="chip" type="button" data-tag="All" aria-pressed="true">All <b>{{ len $posts }}</b></button>
+      {{- range $tags }}
+      <button class="chip" type="button" data-tag="{{ . }}" aria-pressed="false">{{ . }} <b>{{ len (where $posts "Params.tag" .) }}</b></button>
+      {{- end }}
+    </div>
+    <label class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search articles" aria-label="Search articles"></label>
+  </div>
+
+  {{- with index $posts 0 }}
+  {{- $words := slice }}{{ range split .Plain " " }}{{ if and (gt (len .) 6) (lt (len $words) 26) }}{{ $words = $words | append . }}{{ end }}{{ end }}
+  <a class="feature" id="feature" href="{{ .RelPermalink }}">
+    <div class="fx"><canvas id="fx" data-seed="{{ .File.ContentBaseName }}" data-words="{{ delimit $words " " }}"></canvas><span class="stamp">Latest · {{ .Date.Format "2 Jan 2006" }}</span></div>
+    <div class="fb">
+      <div class="kicker">{{ .Params.tag }}</div>
+      <h2>{{ .Title }}</h2>
+      <p>{{ .Params.summary }}</p>
+      <div class="row-meta"><span>{{ .ReadingTime }} min read</span><span>{{ .WordCount }} words</span></div>
+      <span class="more">Read article →</span>
+    </div>
+  </a>
+  {{- end }}
+
+  <div class="ledger" id="ledger">
+    {{- range $posts.GroupByDate "2006" }}
+    <section class="year"><h3>{{ .Key }}</h3><ul>
+      {{- range .Pages }}
+      <li{{ if eq . (index $posts 0) }} class="is-featured"{{ end }} data-tag="{{ .Params.tag }}" data-text="{{ lower (printf "%s %s %s" .Title .Params.summary .Plain) }}"><a class="entry" href="{{ .RelPermalink }}"><span class="d">{{ .Date.Format "Jan 02" }}</span><span class="tt"><b>{{ .Title }}</b><span class="s">{{ .Params.summary }}</span></span><span class="rt">{{ .Params.tag }} · {{ .ReadingTime }} min</span></a></li>
+      {{- end }}
+    </ul></section>
+    {{- end }}
+  </div>
+  <p class="empty" id="empty" hidden>No articles match your search. Try a project name such as CoBunny or HSRC.</p>
+</main>
+{{ partial "footer.html" . }}
+{{ partial "pages-scripts.html" . }}
+{{ end }}

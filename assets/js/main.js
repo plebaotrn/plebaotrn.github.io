@@ -55,7 +55,7 @@
   }
   const soundBtn = document.getElementById('sound'), soundLabel = document.getElementById('sound-label');
   function setSoundUI() { soundBtn.setAttribute('aria-pressed', String(audio.on)); soundLabel.textContent = audio.on ? 'Sound on' : 'Sound off'; }
-  soundBtn.addEventListener('click', () => (audio.on ? stopAudio() : startAudio()));
+  soundBtn.addEventListener('click', () => { audio.on ? stopAudio() : startAudio(); session.set('bt-gate', audio.on ? 'sound' : 'quiet'); });
 
   /* ---------------- particle field with chapter morphs ---------------- */
   const field = { uniforms: null }; window.__field = field;
@@ -617,9 +617,20 @@
     return api;
   })();
 
+  /* ---------------- returning visit: skip the loader and the gate ---------------- */
+  // Once the gate has been passed in this tab, coming back from another page of the site (the Back button,
+  // or a link such as Home) goes straight to the page. The sound choice is kept for the first tap.
+  const session = { get(k) { try { return sessionStorage.getItem(k); } catch { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch {} } };
+  const navType = (performance.getEntriesByType('navigation')[0] || {}).type;
+  const fromSite = (() => { try { return new URL(document.referrer).origin === location.origin; } catch { return false; } })();
+  const choice = session.get('bt-gate');
+  const returning = !!choice && (navType === 'back_forward' || fromSite);
+  addEventListener('pagehide', () => session.set('bt-y', String(Math.round(scrollY))));
+
   /* ---------------- loader ---------------- */
   const num = document.getElementById('loader-num'), bar = document.getElementById('loader-bar'), c = { v: 0 };
-  gsap.to(c, { v: 100, duration: reduce ? 0.3 : 2.4, ease: 'power2.inOut',
+  if (returning) loader.classList.add('is-gone');
+  else gsap.to(c, { v: 100, duration: reduce ? 0.3 : 2.4, ease: 'power2.inOut',
     onUpdate: () => { num.textContent = Math.round(c.v); bar.style.width = c.v + '%'; },
     onComplete: () => {
       gsap.to(loader, { yPercent: -100, duration: reduce ? 0 : 0.9, ease: 'power4.inOut', onComplete: () => loader.classList.add('is-gone') });
@@ -671,12 +682,16 @@
   renderStory(0);
   words[0].forEach((w) => w.classList.remove('lit'));
 
-  function enter(withSound) {
+  function enter(withSound, instant) {
+    session.set('bt-gate', withSound ? 'sound' : 'quiet');
     if (withSound) startAudio();
-    orb.burst();
-    gsap.to('.gate-inner', { opacity: 0, duration: 0.35 });
-    gsap.to(gate, { opacity: 0, duration: 0.7, delay: 0.45, onComplete: () => { gate.classList.add('is-gone'); orb.stop(); } });
-    gsap.delayedCall(reduce ? 0 : 0.9, popHello);
+    if (instant) orb.stop();
+    else {
+      orb.burst();
+      gsap.to('.gate-inner', { opacity: 0, duration: 0.35 });
+      gsap.to(gate, { opacity: 0, duration: 0.7, delay: 0.45, onComplete: () => { gate.classList.add('is-gone'); orb.stop(); } });
+    }
+    gsap.delayedCall(reduce || instant ? 0 : 0.9, popHello);
     window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
     document.body.classList.remove('locked'); if (lenis) lenis.start();
     if (field.uniforms) gsap.to(field.uniforms.uIntro, { value: 1, duration: reduce ? 0 : 2.4, ease: 'expo.out' });
@@ -729,10 +744,9 @@
     src.connect(f); f.connect(g); g.connect(audio.ctx.destination); src.start(now); src.stop(now + 1.05);
   }
 
-  /* ---------------- inline lens gallery + project detail ---------------- */
+  /* ---------------- inline lens gallery: each project opens its own page ---------------- */
   const PROJECTS = JSON.parse(document.getElementById('projects-data').textContent);
   const IMGS = [...document.querySelectorAll('#work .teaser-card img')].map((i) => i.src);
-  const detailEl = document.getElementById('detail'), backBtn = document.getElementById('back');
   const lensCanvas = document.getElementById('lens');
   const lensTitle = document.getElementById('lens-title'), lensSub = document.getElementById('lens-sub'), lensCount = document.getElementById('lens-count');
   const N = PROJECTS.length, pad = (n) => String(n).padStart(2, '0');
@@ -844,61 +858,33 @@
         meshes.forEach((m) => { m.userData.locked = false; gsap.killTweensOf([m.position, m.scale, m.rotation, m.material.uniforms.uAlpha, m.material.uniforms.uCurve]); m.position.z = 0; m.scale.set(1, 1, 1); m.rotation.set(0, 0, 0); m.material.uniforms.uCurve.value = 1; m.material.uniforms.uAlpha.value = 1; });
         state.open = false; gsap.to('.lens-top, .lens-bottom', { opacity: 1, duration: 0.5 }); loop();
       },
-      // centre a project chosen from the detail page's previous/next buttons
-      center(i) { const t = state.scrollBase + state.drag, k = Math.round((t - i * STEP) / TOTAL); state.drag += i * STEP + k * TOTAL - t; state.off = state.scrollBase + state.drag; },
     };
   }
 
-  function fillDetail(i) {
-    const p = PROJECTS[i];
-    document.getElementById('d-img').src = IMGS[i]; document.getElementById('d-img').alt = 'Screenshot of ' + p.title;
-    document.getElementById('d-kicker').textContent = p.type + ' · ' + p.year;
-    document.getElementById('d-title').textContent = p.title;
-    document.getElementById('d-lead').textContent = p.lead;
-    document.getElementById('d-meta').innerHTML = [['Role', p.role], ['Timeline', p.timeline], ['Team', p.team], ['Type', p.type]].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
-    let main = `<section><h2>Overview</h2><p>${p.overview}</p></section><section><h2>What I did</h2><ul>${p.did.map((x) => `<li>${x}</li>`).join('')}</ul></section>`;
-    if (p.process) main += `<section><h2>Process</h2><ol>${p.process.map((x) => `<li>${x}</li>`).join('')}</ol></section>`;
-    if (p.outcome) main += `<section><h2>Outcome</h2><p>${p.outcome}</p></section>`;
-    if (p.gallery) main += `<section><h2>Screens</h2><div class="shots${p.gallery.every((s) => s.tall) ? ' phones' : ''}">${p.gallery.map((s) => `<figure><img src="${s.src}" width="${s.width}" height="${s.height}" alt="${s.caption}" loading="lazy"><figcaption>${s.caption}</figcaption></figure>`).join('')}</div></section>`;
-    document.getElementById('d-main').innerHTML = main;
-    document.getElementById('d-side').innerHTML = `<div class="side-box"><h3>Technology</h3><div class="chips">${p.stack.map((s) => `<span>${s}</span>`).join('')}</div></div><a class="btn" href="${p.link}" target="_blank" rel="noopener">${p.linkLabel} ↗</a>`;
-    const prev = (i - 1 + N) % N, next = (i + 1) % N, pb = document.getElementById('d-prev'), nb = document.getElementById('d-next');
-    pb.textContent = '← ' + PROJECTS[prev].title; nb.textContent = PROJECTS[next].title + ' →';
-    pb.onclick = () => { fillDetail(prev); if (lens) lens.center(prev); }; nb.onclick = () => { fillDetail(next); if (lens) lens.center(next); };
-    detailEl.scrollTop = 0;
-  }
-  function showDetail() {
-    detailEl.classList.add('is-open'); backBtn.classList.add('is-shown');
-    gsap.fromTo(detailEl, { opacity: 0 }, { opacity: 1, duration: 0.45 });
-    gsap.fromTo('.detail-head > *', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.07, delay: 0.1 });
-    detailEl.tabIndex = -1; detailEl.focus({ preventScroll: true });
-  }
+  // each project has its own page: the lens dives into the chosen image, then the browser goes there
   function openProject(i, fromLens) {
-    fillDetail(i); whoosh();
-    document.body.classList.add('locked'); if (lenis) lenis.stop();
-    if (fromLens && lens) lens.dive(i, showDetail); else showDetail();
+    const go = () => { location.href = PROJECTS[i].url; };
+    whoosh();
+    if (fromLens && lens) lens.dive(i, go); else go();
   }
-  function closeDetail(then) {
-    gsap.to(detailEl, { opacity: 0, duration: 0.35, onComplete: () => {
-      detailEl.classList.remove('is-open'); backBtn.classList.remove('is-shown');
-      document.body.classList.remove('locked'); if (lenis) lenis.start();
-      if (lens) lens.reset();
-      if (typeof then === 'function') then(); else lensCanvas.focus({ preventScroll: true });
-    } });
+  // coming back with the browser's back button can restore the page mid dive, so put the gallery back
+  addEventListener('pageshow', (e) => { if (e.persisted && lens) lens.reset(); });
+
+  if (returning) {
+    enter(false, true);
+    session.set('bt-gate', choice);
+    // browsers only start sound after a tap, so a visitor who chose sound gets it back on their first one
+    if (choice === 'sound') {
+      const resume = (e) => {
+        removeEventListener('pointerdown', resume); removeEventListener('keydown', resume);
+        if (!soundBtn.contains(e.target) && !audio.on) startAudio();
+      };
+      addEventListener('pointerdown', resume); addEventListener('keydown', resume);
+    }
+    // with the Back button, land where the visitor left off, usually the project gallery
+    const y = navType === 'back_forward' ? Number(session.get('bt-y')) || 0 : 0;
+    if (y) requestAnimationFrame(() => { ScrollTrigger.refresh(); window.scrollTo(0, y); if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); });
   }
-  document.addEventListener('click', (e) => { const c = e.target.closest('.teaser-card'); if (c) openProject(+c.dataset.index, false); });
-  backBtn.addEventListener('click', () => closeDetail());
-  // the nav stays above the detail view, so its links close the detail first and then scroll to their section
-  document.getElementById('nav').addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a || !detailEl.classList.contains('is-open')) return;
-    e.preventDefault(); e.stopImmediatePropagation();
-    closeDetail(() => {
-      const el = document.querySelector(a.getAttribute('href')); if (!el) return;
-      if (lenis) lenis.scrollTo(el, { offset: -60, immediate: true, force: true }); else el.scrollIntoView();
-    });
-  }, true);
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && detailEl.classList.contains('is-open')) closeDetail(); });
 
   if (reduce) return;
   /* ---------------- hover tilt, cursor, magnetic buttons ---------------- */

@@ -1,0 +1,16 @@
+{{- /* Top bar for the Projects and Writing pages. The thin rule fills while an article is read. */ -}}
+{{- $area := .Section }}
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="{{ site.Home.RelPermalink }}" aria-label="{{ site.Params.author }}, home">{{ partial "bunny-icon.html" 24 }}<span>{{ site.Params.author }}</span></a>
+    <nav class="links" aria-label="Main">
+      {{- range slice "projects" "writing" }}
+      {{- with site.GetPage (printf "/%s" .) }}
+      <a href="{{ .RelPermalink }}"{{ if eq $area .Section }} aria-current="page"{{ end }}>{{ .Title }}</a>
+      {{- end }}
+      {{- end }}
+      <a href="{{ site.Home.RelPermalink }}#contact">Contact</a>
+    </nav>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
