@@ -67,3 +67,7 @@ hugo --gc --minify # production build into ./public
 ## Deploy
 
 Pushing to `main` runs `.github/workflows/hugo.yml`, which builds the site and publishes it to GitHub Pages. In the repository settings, **Pages → Build and deployment → Source** must be set to **GitHub Actions**.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The content (articles, page text, project descriptions, photos, screenshots and artwork) is © Pham Le Bao Tran, all rights reserved, and may not be reused without permission. The libraries in `static/vendor/` keep their own licenses. See [LICENSE](LICENSE) for details.
