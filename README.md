@@ -6,7 +6,7 @@ Live site: https://plebaotrn.github.io/
 
 ## What is on the home page
 
-1. **Loader and sound gate.** A counter from 0 to 100, then a 3D particle orb where the visitor chooses to enter with or without ambient sound. The choice is remembered for the tab, so coming back from another page of the site (the Back button, or a link home) skips both screens. The Back button also returns to where the visitor left off, and sound comes back on their first tap if they chose it.
+1. **Loader and sound gate.** A counter from 0 to 100 while a spiral galaxy forms around a black hole, then the visitor chooses to enter with or without ambient sound. The galaxy ripples on "with sound", settles flat on "without", and swallows the view on enter. The choice is remembered for the tab, so coming back from another page of the site (the Back button, or a link home) skips both screens. The Back button also returns to where the visitor left off, and sound comes back on their first tap if they chose it.
 2. **Scroll story.** Five chapters whose words light up as you scroll, over one particle field that morphs: a 3D bunny (drag to spin, hover to droop its ears), a portrait sketch, an interface that splits into layers and gets tested, a bug that becomes a check mark, and a camera aperture.
 3. **Project lens.** A curved, draggable gallery with sound. Clicking a project dives into the image, then opens the project's own page.
 4. **About.** Focus areas, a terminal, and a 3D skills map you can turn.

@@ -529,94 +529,6 @@
   const nav = document.getElementById('nav');
   addEventListener('scroll', () => nav.classList.toggle('is-solid', scrollY > innerHeight * 0.5), { passive: true });
 
-  /* ---------------- sound gate: a 3D particle orb that answers the two buttons ---------------- */
-  const orb = (() => {
-    const api = { start() {}, stop() {}, burst() {} };
-    const cv = document.getElementById('orb');
-    if (!window.THREE || !cv) return api;
-    const r = new THREE.WebGLRenderer({ canvas: cv, antialias: false, alpha: true });
-    r.setPixelRatio(Math.min(devicePixelRatio, 2));
-    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(35, 1, 0.1, 50); cam.position.z = 6;
-    const N = innerWidth < 700 ? 3200 : 5200, ring = 1300;
-    const pos = new Float32Array((N + ring * 3) * 3), kind = new Float32Array(N + ring * 3), rnd = new Float32Array(N + ring * 3);
-    // a fibonacci sphere for the core, three tilted orbit rings around it
-    for (let i = 0; i < N; i++) {
-      const y = 1 - (i + 0.5) / N * 2, rad = Math.sqrt(1 - y * y), th = i * 2.39996;
-      pos.set([Math.cos(th) * rad, y, Math.sin(th) * rad], i * 3); kind[i] = 0; rnd[i] = Math.random();
-    }
-    for (let k = 0; k < 3; k++) for (let j = 0; j < ring; j++) {
-      const i = N + k * ring + j, a = j / ring * Math.PI * 2, R = 1.45 + k * 0.22;
-      let x = Math.cos(a) * R, y = 0, z = Math.sin(a) * R;
-      const tx = [0.35, -0.6, 1.1][k], tz = [0.2, 0.5, -0.3][k];
-      [y, z] = [y * Math.cos(tx) - z * Math.sin(tx), y * Math.sin(tx) + z * Math.cos(tx)];
-      [x, y] = [x * Math.cos(tz) - y * Math.sin(tz), x * Math.sin(tz) + y * Math.cos(tz)];
-      pos.set([x, y, z], i * 3); kind[i] = k + 1; rnd[i] = Math.random();
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    geo.setAttribute('aKind', new THREE.BufferAttribute(kind, 1));
-    geo.setAttribute('aRand', new THREE.BufferAttribute(rnd, 1));
-    const u = { uTime: { value: 0 }, uLevel: { value: 0.25 }, uCalm: { value: 0 }, uBurst: { value: 0 }, uIn: { value: 0 }, uPR: { value: r.getPixelRatio() } };
-    const mat = new THREE.ShaderMaterial({ uniforms: u, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      vertexShader: `
-        uniform float uTime, uLevel, uCalm, uBurst, uIn, uPR; attribute float aKind, aRand; varying vec3 vC; varying float vA;
-        void main() {
-          vec3 p = position;
-          if (aKind < 0.5) {
-            // the core breathes like a speaker cone; louder on "with sound", glassy still on "without"
-            float lat = asin(clamp(p.y, -1.0, 1.0)), lon = atan(p.z, p.x);
-            float wave = sin(lat * 9.0 - uTime * 3.2) * 0.55 + sin(lon * 6.0 + uTime * 2.1) * 0.3 + sin((lat + lon) * 4.0 + uTime * 1.3) * 0.25;
-            p *= 1.0 + wave * uLevel * 0.12 * (1.0 - uCalm);
-          } else {
-            float a = atan(p.z, p.x);
-            p *= 1.0 + sin(a * (6.0 + aKind * 3.0) + uTime * (1.2 + aKind * 0.4)) * 0.018 * uLevel * (1.0 - uCalm);
-          }
-          vec3 dir = normalize(position + vec3(aRand - 0.5, fract(aRand * 7.3) - 0.5, fract(aRand * 3.1) - 0.5) * 0.6);
-          p = mix(dir * (3.0 + aRand * 4.0), p, uIn);                 // gathers from a loose cloud
-          p += dir * uBurst * (2.5 + aRand * 6.0);                    // and blows outward on enter
-          vec4 mv = modelViewMatrix * vec4(p, 1.0);
-          gl_Position = projectionMatrix * mv;
-          gl_PointSize = (aKind < 0.5 ? 16.0 : 11.0) * uPR * (0.45 + aRand * 0.8) / -mv.z;
-          vec3 base = aKind < 0.5 ? vec3(0.95, 0.94, 1.0) : (aKind < 1.5 ? vec3(0.56, 0.7, 1.0) : (aKind < 2.5 ? vec3(1.0, 0.61, 0.76) : vec3(0.56, 0.86, 0.71)));
-          vC = base; vA = (aKind < 0.5 ? 0.55 : 0.9) * (0.35 + 0.65 * aRand) * (0.25 + 0.75 * smoothstep(-7.5, -4.8, mv.z)) * (1.0 - uBurst);
-        }`,
-      fragmentShader: `varying vec3 vC; varying float vA;
-        void main() { float d = length(gl_PointCoord - 0.5); if (d > 0.5) discard; gl_FragColor = vec4(vC, smoothstep(0.5, 0.05, d) * vA); }` });
-    const pts = new THREE.Points(geo, mat), grp = new THREE.Group(); grp.add(pts); scene.add(grp);
-    const space = document.getElementById('gate-space');
-    const resize = () => {
-      r.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix();
-      // centre the orb in the free row and size it so the outer ring clears the text
-      const box = space.getBoundingClientRect(), unit = 2 * Math.tan(THREE.MathUtils.degToRad(17.5)) * cam.position.z / innerHeight;
-      const fit = Math.min(box.height * 0.92, innerWidth * 0.92) * unit / 3.9;
-      grp.scale.setScalar(Math.max(0.3, Math.min(0.62, fit)));
-      grp.position.y = -((box.top + box.height / 2) - innerHeight / 2) * unit;
-    };
-    resize(); addEventListener('resize', resize);
-    const m = { x: 0, y: 0, tx: 0, ty: 0 }, target = { level: 0.25, calm: 0 };
-    addEventListener('pointermove', (e) => { m.tx = (e.clientX / innerWidth) * 2 - 1; m.ty = (e.clientY / innerHeight) * 2 - 1; });
-    const stateEl = document.getElementById('gate-state');
-    const hover = (level, calm, label) => () => { target.level = level; target.calm = calm; stateEl.textContent = label; };
-    const bs = document.getElementById('enter-sound'), bq = document.getElementById('enter-quiet');
-    [['pointerenter', bs, hover(1, 0, 'Ambient sound on')], ['focus', bs, hover(1, 0, 'Ambient sound on')],
-     ['pointerenter', bq, hover(0.25, 1, 'Silent mode')], ['focus', bq, hover(0.25, 1, 'Silent mode')],
-     ['pointerleave', bs, hover(0.25, 0, '')], ['pointerleave', bq, hover(0.25, 0, '')]].forEach(([ev, el, fn]) => el.addEventListener(ev, fn));
-    let raf = 0; const clock = new THREE.Clock();
-    const frame = () => {
-      raf = requestAnimationFrame(frame);
-      const t = clock.getElapsedTime();
-      u.uTime.value = reduce ? 0 : t;
-      u.uLevel.value += (target.level - u.uLevel.value) * 0.06; u.uCalm.value += (target.calm - u.uCalm.value) * 0.06;
-      m.x += (m.tx - m.x) * 0.05; m.y += (m.ty - m.y) * 0.05;
-      grp.rotation.y = (reduce ? 0 : t * 0.12) + m.x * 0.5; grp.rotation.x = 0.25 + m.y * 0.3;
-      r.render(scene, cam);
-    };
-    api.start = () => { requestAnimationFrame(resize); if (!raf) frame(); gsap.to(u.uIn, { value: 1, duration: reduce ? 0 : 2.2, ease: 'expo.out' }); };
-    api.stop = () => { cancelAnimationFrame(raf); raf = 0; removeEventListener('resize', resize); geo.dispose(); mat.dispose(); r.dispose(); };
-    api.burst = () => gsap.to(u.uBurst, { value: 1, duration: reduce ? 0 : 1.1, ease: 'power3.in' });
-    return api;
-  })();
-
   /* ---------------- returning visit: skip the loader and the gate ---------------- */
   // Once the gate has been passed in this tab, coming back from another page of the site (the Back button,
   // or a link such as Home) goes straight to the page. The sound choice is kept for the first tap.
@@ -627,19 +539,150 @@
   const returning = !!choice && (navType === 'back_forward' || fromSite);
   addEventListener('pagehide', () => session.set('bt-y', String(Math.round(scrollY))));
 
+  /* ---------------- loader and sound gate: a spiral galaxy around a black hole, under twinkling stars ---------------- */
+  // it forms while the counter runs, turns slowly behind the sound choice, and swallows the view on enter
+  const voidScene = (() => {
+    const api = { progress() {}, mood() {}, toGate() {}, collapse(done) { done(); } };
+    const cv = document.getElementById('void');
+    if (!window.THREE || !cv || returning) return api;
+    const r = new THREE.WebGLRenderer({ canvas: cv, antialias: false, alpha: false });
+    r.setPixelRatio(Math.min(devicePixelRatio, 2)); r.setClearColor(0x0e0f13, 1);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(42, 1, 0.05, 100); cam.position.set(0, 0, 7);
+    const small = innerWidth < 700, PR = r.getPixelRatio();
+    const u = { uTime: { value: 0 }, uSpin: { value: 0 }, uForm: { value: 0 }, uPull: { value: 0 }, uLevel: { value: 0 }, uCalm: { value: 0 }, uPR: { value: PR } };
+    const pointsMat = (vs, fs) => new THREE.ShaderMaterial({ uniforms: u, vertexShader: vs, fragmentShader: fs, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+
+    // the disc: three spiral arms, a hot inner ring that orbits fast, and a cooler blue outskirts
+    const G = small ? 9000 : 22000, gp = new Float32Array(G * 3), ga = new Float32Array(G * 4);
+    for (let i = 0; i < G; i++) {
+      const inner = i < G * 0.22;
+      const rad = inner ? 0.42 + Math.pow(Math.random(), 1.6) * 0.55 : 0.6 + Math.pow(Math.random(), 0.9) * 3.4;
+      const arm = Math.floor(Math.random() * 3), spread = (Math.random() - 0.5) * (inner ? 6.3 : 0.55 + rad * 0.12);
+      const ang = inner ? Math.random() * 6.283 : arm * 2.094 + rad * 1.9 + spread;
+      const thick = (Math.random() - 0.5) * (inner ? 0.025 : 0.06 + rad * 0.05);
+      gp.set([rad, ang, thick], i * 3);
+      ga.set([Math.random(), inner ? 1 : 0, Math.random(), Math.random()], i * 4);
+    }
+    const gg = new THREE.BufferGeometry();
+    gg.setAttribute('position', new THREE.BufferAttribute(gp, 3)); gg.setAttribute('aInfo', new THREE.BufferAttribute(ga, 4));
+    const disc = new THREE.Points(gg, pointsMat(`
+      uniform float uTime, uSpin, uForm, uPull, uLevel, uCalm, uPR; attribute vec4 aInfo; varying vec3 vC; varying float vA;
+      void main() {
+        float rad = position.x, inner = aInfo.y;
+        // inner orbits are faster; everything spirals in from far away while loading, and falls in at the end
+        float form = clamp(uForm * 1.25 - aInfo.x * 0.25, 0.0, 1.0);
+        float rr = rad * mix(3.2, 1.0, form * form * (3.0 - 2.0 * form)) * (1.0 - uPull * (0.92 + aInfo.z * 0.08));
+        float speed = 0.55 / pow(rad + 0.15, 1.35) * (1.0 + uPull * 6.0);
+        float ang = position.y + uSpin * speed + (1.0 - form) * 2.5;
+        // with sound the disc ripples outward like a speaker; silent mode lets it settle flat
+        float wave = sin(rad * 7.0 - uTime * 5.0) * 0.07 * uLevel * (1.0 - uPull) * smoothstep(0.4, 1.2, rad);
+        vec3 p = vec3(cos(ang) * rr, position.z * (1.0 - uPull) * (1.0 - uCalm * 0.7) + wave, sin(ang) * rr);
+        vec4 mv = modelViewMatrix * vec4(p, 1.0); gl_Position = projectionMatrix * mv;
+        gl_PointSize = (inner > 0.5 ? 24.0 : 18.0) * uPR * (0.5 + aInfo.w * 0.9) / -mv.z;
+        vec3 hot = vec3(1.0, 0.86, 0.78), pink = vec3(1.0, 0.61, 0.76), blue = vec3(0.56, 0.7, 1.0);
+        vC = inner > 0.5 ? mix(vec3(1.0, 0.95, 0.9), pink, aInfo.z * 0.6) : mix(mix(hot, blue, smoothstep(0.6, 3.0, rad)), pink, step(0.9, aInfo.z) * 0.8);
+        float flicker = 0.75 + 0.25 * sin(uTime * (2.0 + aInfo.w * 4.0) + aInfo.z * 40.0);
+        vA = (inner > 0.5 ? 0.85 : 0.5) * mix(flicker, 0.9, uCalm) * (0.15 + 0.85 * form) * (1.0 - smoothstep(0.75, 1.0, uPull)) * (1.0 - uCalm * 0.35) * (1.0 + uLevel * 0.25);
+      }`, `varying vec3 vC; varying float vA;
+      void main() { float d = length(gl_PointCoord - 0.5); if (d > 0.5) discard; gl_FragColor = vec4(vC, smoothstep(0.5, 0.0, d) * vA); }`));
+    const tilt = new THREE.Group(); tilt.rotation.set(0.36, 0, -0.18); tilt.add(disc); scene.add(tilt);
+
+    // the event horizon and its photon ring always face the viewer; the ring also bends the far side of the disc over the top
+    const ringMat = new THREE.ShaderMaterial({ uniforms: u, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `uniform float uTime, uForm, uPull, uLevel, uCalm; varying vec2 vUv;
+        void main() {
+          vec2 c = vUv - 0.5; float d = length(c) * 2.0, a = atan(c.y, c.x);
+          float ring = exp(-pow((d - 0.38) / 0.035, 2.0)) * mix(0.75 + 0.25 * sin(a * 3.0 - uTime * 2.2), 0.8, uCalm);
+          // sound waves leave the horizon as thin expanding rings
+          float waves = 0.0;
+          for (int k = 0; k < 3; k++) { float ph = fract(uTime * 0.45 + float(k) / 3.0); waves += exp(-pow((d - (0.42 + ph * 0.55)) / 0.012, 2.0)) * (1.0 - ph); }
+          float halo = exp(-pow((d - 0.42) / 0.16, 2.0)) * 0.22;
+          float lens = exp(-pow((d - 0.5) / 0.07, 2.0)) * smoothstep(-0.1, 0.6, sin(a)) * 0.35;
+          vec3 col = mix(vec3(1.0, 0.8, 0.86), vec3(0.75, 0.82, 1.0), 0.5 + 0.5 * sin(a + uTime * 0.6));
+          float k = (ring + halo + lens + waves * uLevel * 0.9) * smoothstep(0.0, 0.6, uForm) * (1.0 + uPull * 1.5 + uLevel * 0.3) * (1.0 - uCalm * 0.3);
+          gl_FragColor = vec4(col * k, k);
+        }` });
+    const ring = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 2.4), ringMat); scene.add(ring);
+    const hole = new THREE.Mesh(new THREE.CircleGeometry(0.43, 64), new THREE.MeshBasicMaterial({ color: 0x050507 }));
+    hole.position.z = 0.01; scene.add(hole);
+
+    // background stars; the brightest ones sparkle with four soft rays
+    const S = small ? 700 : 1600, sp = new Float32Array(S * 3), sa = new Float32Array(S * 3);
+    for (let i = 0; i < S; i++) {
+      const v = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(14 + Math.random() * 20);
+      sp.set(v.toArray(), i * 3); sa.set([Math.random(), Math.random(), Math.random() < 0.07 ? 1 : 0], i * 3);
+    }
+    const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(sp, 3)); sg.setAttribute('aInfo', new THREE.BufferAttribute(sa, 3));
+    const stars = new THREE.Points(sg, pointsMat(`
+      uniform float uTime, uPR, uPull; attribute vec3 aInfo; varying float vA, vBig; varying vec3 vC;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv;
+        float tw = pow(0.5 + 0.5 * sin(uTime * (0.8 + aInfo.x * 2.6) + aInfo.y * 60.0), 3.0);
+        vBig = aInfo.z;
+        gl_PointSize = (aInfo.z > 0.5 ? 26.0 : 2.0 + aInfo.x * 3.2) * uPR * (0.6 + 0.6 * tw);   // fixed pixel size, so far stars stay visible
+        vA = (0.25 + 0.75 * tw) * (aInfo.z > 0.5 ? 1.0 : 0.7) * (1.0 - uPull * 0.6);
+        vC = mix(vec3(0.95, 0.94, 1.0), aInfo.y > 0.8 ? vec3(1.0, 0.75, 0.86) : vec3(0.72, 0.8, 1.0), step(0.6, aInfo.y));
+      }`, `varying float vA, vBig; varying vec3 vC;
+      void main() {
+        vec2 c = gl_PointCoord - 0.5; float d = length(c);
+        float core = vBig > 0.5 ? exp(-d * d * 160.0) : smoothstep(0.5, 0.1, d);
+        float rays = vBig > 0.5 ? (exp(-abs(c.x) * 60.0) * exp(-abs(c.y) * 7.0) + exp(-abs(c.y) * 60.0) * exp(-abs(c.x) * 7.0)) * 0.8 : 0.0;
+        float k = (core + rays) * vA; if (k < 0.004) discard;
+        gl_FragColor = vec4(vC * k, k);
+      }`));
+    scene.add(stars);
+
+    const resize = () => { r.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); const s = Math.min(1, cam.aspect * 1.15); tilt.scale.setScalar(s); ring.scale.setScalar(s); hole.scale.setScalar(s); };
+    resize(); addEventListener('resize', resize);
+    const m = { x: 0, y: 0, tx: 0, ty: 0 };
+    const onMove = (e) => { m.tx = e.clientX / innerWidth - 0.5; m.ty = e.clientY / innerHeight - 0.5; };
+    addEventListener('pointermove', onMove);
+    let raf = 0, last = 0; const clock = new THREE.Clock();
+    const mood = { level: 0, calm: 0 };
+    const frame = () => {
+      raf = requestAnimationFrame(frame);
+      const t = clock.getElapsedTime(), dt = Math.min(0.05, t - last); last = t; u.uTime.value = reduce ? 4 : t;
+      u.uLevel.value += (mood.level - u.uLevel.value) * 0.05; u.uCalm.value += (mood.calm - u.uCalm.value) * 0.05;
+      if (!reduce) u.uSpin.value += dt * (1 + u.uLevel.value * 1.2 - u.uCalm.value * 0.65) * (1 + u.uPull.value * 2);
+      m.x += (m.tx - m.x) * 0.04; m.y += (m.ty - m.y) * 0.04;
+      cam.position.x = m.x * 0.6; cam.position.y = -m.y * 0.4; cam.lookAt(0, 0, 0);
+      ring.quaternion.copy(cam.quaternion); hole.quaternion.copy(cam.quaternion);
+      stars.rotation.y = t * 0.004;
+      r.render(scene, cam);
+    };
+    frame();
+    const dispose = () => { cancelAnimationFrame(raf); removeEventListener('resize', resize); removeEventListener('pointermove', onMove); [gg, sg].forEach((g) => g.dispose()); r.dispose(); };
+    api.progress = (k) => { u.uForm.value = reduce ? 1 : k; };
+    api.mood = (level, calm) => { mood.level = level; mood.calm = calm; };
+    api.toGate = () => { if (!reduce) gsap.to(tilt.rotation, { x: 0.58, z: -0.08, duration: 3.2, ease: 'power2.inOut' }); };
+    // at the end everything spirals into the hole and the camera falls through it
+    api.collapse = (done) => {
+      if (reduce) { done(); dispose(); return; }
+      gsap.timeline({ onComplete: () => { done(); dispose(); } })
+        .to(u.uPull, { value: 1, duration: 1.2, ease: 'power3.in' })
+        .to(cam.position, { z: 0.6, duration: 0.9, ease: 'power3.in' }, 0.55)
+        .to(hole.scale, { x: 1.4, y: 1.4, z: 1.4, duration: 0.9, ease: 'power3.in' }, 0.55);
+    };
+    return api;
+  })();
+
   /* ---------------- loader ---------------- */
   const num = document.getElementById('loader-num'), bar = document.getElementById('loader-bar'), c = { v: 0 };
   if (returning) loader.classList.add('is-gone');
-  else gsap.to(c, { v: 100, duration: reduce ? 0.3 : 2.4, ease: 'power2.inOut',
-    onUpdate: () => { num.textContent = Math.round(c.v); bar.style.width = c.v + '%'; },
+  else gsap.to(c, { v: 100, duration: reduce ? 0.3 : 3.2, ease: 'power2.inOut',
+    onUpdate: () => { num.textContent = Math.round(c.v); bar.style.width = c.v + '%'; voidScene.progress(c.v / 100); },
     onComplete: () => {
-      gsap.to(loader, { yPercent: -100, duration: reduce ? 0 : 0.9, ease: 'power4.inOut', onComplete: () => loader.classList.add('is-gone') });
-      gate.classList.remove('is-gone');
-      orb.start();
-      gsap.fromTo('.gate-top > *, .gate-bottom > *', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', stagger: 0.07, delay: 0.3 });
-      if (field.uniforms) gsap.to(field.uniforms.uIntro, { value: 0.35, duration: 2, ease: 'power2.out' });
-      document.getElementById('enter-sound').focus({ preventScroll: true });
+      gsap.to('.loader-ui', { opacity: 0, duration: reduce ? 0 : 0.5 });
+      voidScene.toGate();
+      showGate();
     } });
+  function showGate() {
+    gate.classList.remove('is-gone');
+    gsap.fromTo('.gate-top > *, .gate-bottom > *', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', stagger: 0.07, delay: 0.3 });
+    if (field.uniforms) gsap.to(field.uniforms.uIntro, { value: 0.35, duration: 2, ease: 'power2.out' });
+    document.getElementById('enter-sound').focus({ preventScroll: true });
+  }
 
   /* ---------------- story chapters ---------------- */
   const chapters = gsap.utils.toArray('.chapter');
@@ -682,19 +725,30 @@
   renderStory(0);
   words[0].forEach((w) => w.classList.remove('lit'));
 
+  // the two buttons set the galaxy's mood; choosing one sends the view through the black hole
+  const stateEl = document.getElementById('gate-state');
+  const moods = [['enter-sound', 1, 0, 'Ambient sound on'], ['enter-quiet', 0, 1, 'Silent mode']];
+  moods.forEach(([id, level, calm, label]) => {
+    const el = document.getElementById(id);
+    const on = () => { voidScene.mood(level, calm); stateEl.textContent = label; }, off = () => { voidScene.mood(0, 0); stateEl.textContent = ''; };
+    el.addEventListener('pointerenter', on); el.addEventListener('focus', on); el.addEventListener('pointerleave', off); el.addEventListener('blur', off);
+  });
+  let entered = false;
   function enter(withSound, instant) {
+    if (entered) return; entered = true;
     session.set('bt-gate', withSound ? 'sound' : 'quiet');
     if (withSound) startAudio();
-    if (instant) orb.stop();
-    else {
-      orb.burst();
+    if (!instant) {
       gsap.to('.gate-inner', { opacity: 0, duration: 0.35 });
-      gsap.to(gate, { opacity: 0, duration: 0.7, delay: 0.45, onComplete: () => { gate.classList.add('is-gone'); orb.stop(); } });
+      voidScene.collapse(() => {
+        gate.classList.add('is-gone');
+        gsap.to(loader, { opacity: 0, duration: reduce ? 0 : 0.6, onComplete: () => loader.classList.add('is-gone') });
+      });
     }
-    gsap.delayedCall(reduce || instant ? 0 : 0.9, popHello);
+    gsap.delayedCall(reduce || instant ? 0 : 1.9, popHello);
     window.scrollTo(0, 0); if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
     document.body.classList.remove('locked'); if (lenis) lenis.start();
-    if (field.uniforms) gsap.to(field.uniforms.uIntro, { value: 1, duration: reduce ? 0 : 2.4, ease: 'expo.out' });
+    if (field.uniforms) gsap.to(field.uniforms.uIntro, { value: 1, duration: reduce ? 0 : 2.4, ease: 'expo.out', delay: reduce || instant ? 0 : 1.3 });
     ScrollTrigger.create({ trigger: '#story', start: 'top top', end: 'bottom bottom', scrub: true, onUpdate: (s) => renderStory(s.progress) });
     ScrollTrigger.create({ trigger: '.solid', start: 'top 80%', end: 'top 10%', scrub: true,
       onUpdate: (s) => { if (field.uniforms) field.uniforms.uFade.value = s.progress; } });

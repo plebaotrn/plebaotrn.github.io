@@ -46,19 +46,22 @@ main, footer, .nav { position: relative; z-index: 2; }
 .js-on .overlay { display: flex; }
 .overlay.is-gone { display: none !important; }
 .loader { flex-direction: column; justify-content: flex-end; padding: var(--gutter); padding-bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px)); }
+#void { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.loader-ui { position: relative; }
 .loader-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
-.loader-num { font-size: clamp(72px, 16vw, 200px); font-weight: 800; line-height: .85; letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
+.loader-num { font-size: clamp(56px, 11vw, 140px); font-weight: 800; line-height: .85; letter-spacing: -0.06em; font-variant-numeric: tabular-nums; }
 .loader-meta { font-family: var(--mono); font-size: 13px; color: var(--muted); text-align: right; display: grid; gap: 4px; }
 .loader-bar { margin-top: 24px; height: 1px; background: var(--line); }
 .loader-bar span { display: block; height: 100%; width: 0%; background: var(--text); }
-.gate { background: var(--ink); align-items: stretch; justify-content: center; text-align: center; padding: var(--gutter); overflow: hidden; }
-#orb { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.gate { background: transparent; align-items: stretch; justify-content: center; text-align: center; padding: var(--gutter); overflow: hidden; }
 .gate-inner { position: relative; display: grid; grid-template-rows: auto 1fr auto; justify-items: center; width: 100%; max-width: 640px; padding-block: clamp(24px, 6vh, 64px); }
 .gate-top { display: grid; gap: 10px; justify-items: center; }
 .gate-top .kicker { color: var(--pink); }
 .gate h1 { font-size: clamp(32px, 5.4vw, 54px); font-weight: 800; line-height: 1.05; letter-spacing: -0.045em; }
 .gate-bottom { display: grid; gap: 14px; justify-items: center; }
 .gate p { color: var(--body); max-width: 30em; }
+/* the galaxy shows through the gate, so its text gets a soft dark halo */
+.gate h1, .gate p, .gate small, .gate .kicker, .gate-state { text-shadow: 0 0 18px var(--ink), 0 0 6px var(--ink); }
 .gate-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .gate-actions .btn { background: var(--ink); }
 .gate-actions .btn-solid { background: var(--text); }

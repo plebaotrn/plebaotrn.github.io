@@ -1,14 +1,16 @@
-{{- /* Loader and the sound gate. Projects open on their own pages under /projects/. */ -}}
+{{- /* Loader and the sound gate: a galaxy forms around a black hole while the counter runs, then the gate sits over it. Projects open on their own pages under /projects/. */ -}}
 <div class="overlay loader" id="loader" aria-hidden="true">
-  <div class="loader-row">
-    <div class="loader-num" id="loader-num">0</div>
-    <div class="loader-meta"><span>{{ site.Params.author }}</span><span>Portfolio {{ now.Year }}</span><span>Loading</span></div>
+  <canvas id="void"></canvas>
+  <div class="loader-ui">
+    <div class="loader-row">
+      <div class="loader-num" id="loader-num">0</div>
+      <div class="loader-meta"><span>{{ site.Params.author }}</span><span>Portfolio {{ now.Year }}</span><span>Loading</span></div>
+    </div>
+    <div class="loader-bar"><span id="loader-bar"></span></div>
   </div>
-  <div class="loader-bar"><span id="loader-bar"></span></div>
 </div>
 
 <div class="overlay gate is-gone" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
-  <canvas id="orb" aria-hidden="true"></canvas>
   <div class="gate-inner">
     <div class="gate-top">
       <div class="kicker">Portfolio {{ now.Year }}</div>
@@ -17,7 +19,7 @@
     <div class="gate-space" id="gate-space"></div>
     <div class="gate-bottom">
       <div class="gate-state" id="gate-state" aria-hidden="true"></div>
-      <p>Software developer focused on UI/UX and quality. Scroll through the story, then explore the projects.</p>
+      <p>I build software, design the screens and test them until the bugs give up. Scroll through the story, then explore the projects.</p>
       <div class="gate-actions">
         <button class="btn btn-solid" id="enter-sound" type="button">Enter with sound</button>
         <button class="btn" id="enter-quiet" type="button">Enter without sound</button>
