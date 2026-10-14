@@ -10,7 +10,7 @@ disableKinds = ["taxonomy", "term"]
   email = "phamtran2082005@gmail.com"
   linkedin = "https://www.linkedin.com/in/le-bao-tran-pham-016987325/"
   github = "https://github.com/plebaotrn"
-  available = "I am available for internships from 2026, in frontend development, UI/UX design or quality assurance."
+  available = "I am available for internships from 2026, in software development, UI/UX design or QA/QC."
 
 [outputs]
   home = ["html"]
